@@ -168,7 +168,7 @@
   /* ===================== КАРТА ДНЯ ===================== */
   function rng(seed){ var s = 0; for(var i = 0; i < seed.length; i++) s = (s*31 + seed.charCodeAt(i)) >>> 0; return function(){ s = (s + 0x6D2B79F5) >>> 0; var t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0)/4294967296; }; }
   $$("[data-cardday]").forEach(function(box){
-    var cv = $("canvas", box), x = cv.getContext("2d"), today = new Date(), dstr = today.toISOString().slice(0, 10), off = 0;
+    var cv = $("canvas", box), x = cv.getContext("2d"), today = new Date(), dstr = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(), off = 0;
     var note = $("[data-cd-note]", box), ok = $("[data-cd-ok]", box);
     function draw(){
       var r = rng(dstr + ":" + off), W = cv.width, H = cv.height, hues = [186, 258, 316, 45, 150], h1 = hues[Math.floor(r()*5)], h2 = hues[Math.floor(r()*5)];
