@@ -10,12 +10,14 @@ from art import ARTICLES, CATS
 import articles1, articles2, articles3, articles4  # noqa: регистрируют статьи
 from tests_data import TESTS, SCALE
 from extra import LILA_CELLS, LILA_JUMPS, CARD_PROMPTS, CARD_WORDS, CHALLENGE, NAV_THEMES
+from legal import oferta_body, politika_body, disclaimer, crisis
 
 OUT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://avtomaster24bot-lab.github.io/vnutrikod/"
 BASE = "/vnutrikod/"
 BRAND = "Внутрикод"
-V = "9"
+V = "10"
+KOLESO = "https://avtomaster24bot-lab.github.io/koleso-uspeha/"
 TG = "https://t.me/MarinaNew"
 PAGES = []
 MOD = {m["n"]: m for m in MODULES}
@@ -61,6 +63,9 @@ P("marafon:dvizhenie", "Марафон «Движение к цели»", "maraf
 P("psy", "Наставничество «Архитектор продукта»", "psihologam/", "arhitektor-produkta", "", "Хочу обсудить наставничество «Архитектор продукта» для своего проекта.", "Расскажите, пожалуйста, как проходит работа и как оплатить.", kicker="Для психологов · 1–2 месяца", short="Создать свою трансформационную игру или программу.")
 P("psy-wait", "Лист ожидания: обучение ведению Т-игр", "psihologam/", "psy-obuchenie", "", "Хочу встать в лист ожидания на обучение ведению Т-игр и групп с МАК.", "Сообщите, пожалуйста, когда откроется набор.", noprice=True)
 P("vopros", "Вопрос Марине", "marina/", "vopros", "", "У меня вопрос.", "", noprice=True)
+P("navigator-trial", "ИИ-навигатор — проба", "podpiska/", "navigator-trial", "", "Хочу оформить пробный доступ к ИИ-навигатору «Колесо успеха» (990 ₽ / 5 500 ₸).", "Пришлите, пожалуйста, как оплатить и как подключить доступ.", kicker="Подписка · проба", short="Короткий старт: маршрут по методу Марины после бесплатного теста.")
+P("navigator-month", "ИИ-навигатор — месяц", "podpiska/", "navigator-month", "", "Хочу оформить месячную подписку на ИИ-навигатор «Колесо успеха» (2 490 ₽ / 13 500 ₸).", "Пришлите, пожалуйста, как оплатить и как подключить доступ.", kicker="Подписка · месяц", short="Ежедневный маршрут и диалоги с навигатором.")
+P("navigator-year", "ИИ-навигатор — год", "podpiska/", "navigator-year", "", "Хочу оформить годовую подписку на ИИ-навигатор «Колесо успеха» (19 900 ₽ / 107 000 ₸).", "Пришлите, пожалуйста, как оплатить и как подключить доступ.", kicker="Подписка · год", short="Выгоднее месяца, если готовы идти регулярно.")
 
 def cta(key, label="Записаться", cls="btn", title=None):
     p = PROD[key]
@@ -74,7 +79,7 @@ def prodcard(key, root):
             % (e(p["k"]), root, p["u"], e(p["t"]), e(p["s"]), price(key), cta(key, "Записаться", "btn sm")))
 
 # ---------------------------------------------------------------- макет
-NAV = [("navigator/", "Навигатор", "nav"), ("znaniya/", "Знания", "zn"), ("podarki/", "Подарки", "gift"), ("ceny/", "Форматы и цены", "price"), ("marina/", "Марина", "mar")]
+NAV = [("navigator/", "Навигатор", "nav"), ("podpiska/", "Подписка", "sub"), ("znaniya/", "Знания", "zn"), ("podarki/", "Подарки", "gift"), ("ceny/", "Форматы и цены", "price"), ("marina/", "Марина", "mar")]
 LOGO = '<svg class="logo-i" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cf7ff"/><stop offset=".5" stop-color="#9b7bff"/><stop offset="1" stop-color="#ff6bd6"/></linearGradient></defs><circle cx="20" cy="20" r="17" fill="none" stroke="url(#lg)" stroke-width="2.5"/><path d="M8 20h6l3-7 6 14 3-7h6" fill="none" stroke="url(#lg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 
 MODAL = '''<div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -125,11 +130,11 @@ def layout(path, title, desc, body, active="", mcta=None, jsonld=None, tools=Fal
 <a class="me" href="{root}moj-put/" title="Мой путь: уровень и награды"><span class="lvl" data-lvl>1</span><span class="me-t">Мой путь</span></a><button class="burger" type="button" aria-label="Меню" aria-controls="nav" aria-expanded="false"><span></span><span></span></button></div></header>
 <main id="main">{('<div class="wrap">' + bc + '</div>') if bc else ''}{body}</main>
 <footer class="foot"><div class="wrap fgrid"><div><a class="logo" href="{home_href}">{LOGO}<span>{BRAND}</span></a><p class="muted small">Психологическая лаборатория Марины Степановой: знания, бесплатные инструменты и живые онлайн-сессии в группах до 8 человек.</p>
-<p class="small"><a href="{root}vazhno/">Важно: не замена медицинской помощи</a> · <a href="{root}konfidencialnost/">Конфиденциальность</a></p></div>
+<p class="small"><a href="{root}vazhno/">Важно: не медицинская услуга</a> · <a href="{root}oferta/">Оферта</a> · <a href="{root}politika/">Политика персональных данных</a> · <a href="{root}konfidencialnost/">Конфиденциальность на сайте</a></p></div>
 <div><b>Начать</b><a href="{root}navigator/">Навигатор</a><a href="{root}testy/">Тесты</a><a href="{root}podarki/">Подарки</a><a href="{root}moj-put/">Мой путь</a></div>
 <div><b>Знания</b><a href="{root}znaniya/">Энциклопедия</a><a href="{root}znaniya/igra-lila/">Игра «Лила»</a><a href="{root}znaniya/sindrom-samozvanca/">Синдром самозванца</a><a href="{root}znaniya/treugolnik-karpmana/">Треугольник Карпмана</a></div>
 <div><b>Работа с Мариной</b><a href="{root}ceny/">Форматы и цены</a><a href="{root}diagnostika/">Диагностика</a><a href="{root}koleso-uspeha/">«Колесо успеха»</a><a href="{root}klub/">Закрытый клуб</a><a href="{root}psihologam/">Психологам</a><a href="{root}otzyvy/">Отзывы</a><a href="{root}faq/">Вопросы</a></div></div>
-<div class="wrap small muted fbot">© Марина Степанова · Telegram <a href="{TG}" target="_blank" rel="noopener">@MarinaNew</a> · канал <a href="https://t.me/koleso_uspeha" target="_blank" rel="noopener">@koleso_uspeha</a> · Если вам сейчас очень плохо — <a href="{root}vazhno/#help">куда обратиться</a></div></footer>
+<div class="wrap small muted fbot">© Марина Степанова · Telegram <a href="{TG}" target="_blank" rel="noopener">@MarinaNew</a> · канал <a href="https://t.me/koleso_uspeha" target="_blank" rel="noopener">@koleso_uspeha</a> · Живые тренинги: <a href="https://avtomaster24bot-lab.github.io/koleso-uspeha/">Код счастливой жизни</a> · Если вам сейчас очень плохо — <a href="{root}vazhno/#help">куда обратиться</a></div></footer>
 {mob}{MODAL}{GIFT}
 <script src="{root}assets/config.js?v={V}"></script><script src="{root}assets/catalog.js?v={V}"></script><script src="{root}assets/app.js?v={V}"></script>{tl}
 </body></html>'''
@@ -189,6 +194,7 @@ def hero(kick, h1, lead, btns="", extra="", cls=""):
     return '<section class="hero %s"><div class="wrap"><span class="kick rv">%s</span><h1 class="rv">%s</h1>%s%s%s</div></section>' % (cls, kick, h1, ('<p class="lead rv">%s</p>' % lead) if lead else "", ('<div class="btns rv">%s</div>' % btns) if btns else "", extra)
 
 LADDER = [("Бесплатно", "Тесты, карта дня, Мини-Лила, энциклопедия", "podarki/", "0 ₽", None),
+          ("ИИ-навигатор", "Ежедневный маршрут по методу Марины, тарифы от 990 ₽", "podpiska/", None, "navigator-month"),
           ("Диагностика", "Лично, 1 на 1, 30 минут — засчитывается в покупку", "diagnostika/", None, "diag"),
           ("Мини-тренинг", "Групповая диагностика с лёгким разворотом, 1–1,5 часа", "ceny/#mini", None, "mini:samozvanets"),
           ("Клуб", "Медитации по понедельникам, групповые «Разборы»", "klub/", None, "klub"),
@@ -218,7 +224,7 @@ def home():
 <span class="kick rv">Психологическая лаборатория Марины Степановой</span>
 <h1 class="rv glow">Внутри&shy;код</h1>
 <p class="lead rv">Ваши решения о деньгах, целях и людях подчиняются внутреннему коду: убеждениям, страхам и сценариям. Здесь его можно <b>расшифровать</b> — бесплатно, с тестами и знаниями, — и <b>перенастроить</b> вживую с Мариной.</p>
-<div class="btns rv"><a class="btn" href="#navigator">Запустить навигатор</a><a class="btn ghost" href="testy/tormoza/">Тест «Кто жмёт на тормоза?»</a></div>
+<div class="btns rv"><a class="btn" href="testy/koleso/">Бесплатный тест «Колесо баланса»</a><a class="btn ghost" href="#navigator">Запустить навигатор</a><a class="btn ghost" href="https://t.me/koleso_uspeha" target="_blank" rel="noopener">Telegram-канал</a></div>
 <div class="chips rv"><span class="chip">{len(ARTICLES)} статей</span><span class="chip">{len(TESTS)} тестов</span><span class="chip">Мини-Лила онлайн</span><span class="chip">Группы до 8 человек</span></div></div>
 <div class="orb rv" aria-hidden="true"><div class="core"></div><span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span></div></div></section>
 <section class="sec" id="navigator"><div class="wrap">{head("Интерактивный навигатор", "Ваш личный маршрут за 1 минуту", "Ответьте на 4 вопроса — навигатор соберёт путь: подарок, статья, тест и живой шаг с Мариной. Работает прямо в браузере, без регистрации.")}{NAVBOX}</div></section>
@@ -228,7 +234,7 @@ def home():
 {sec(head("Лестница форматов", "От бесплатного теста до полной трансформации", "Каждая ступень логично ведёт к следующей.") + ladder(root) + '<div class="btns center"><a class="btn" href="ceny/">Все форматы и цены</a></div>', "alt")}
 {sec(marina_block(root))}
 {sec(head("Отзывы", "Что говорят участники") + '<div class="grid g3">' + revs + '</div><div class="btns center"><a class="btn ghost" href="otzyvy/">Все отзывы</a></div>', "alt")}
-{sec('<div class="band glass rv"><h2>Не знаете, с чего начать?</h2><p>Личная диагностика: 30 минут один на один с Мариной. Её стоимость засчитывается, если вы продолжите работу.</p><div class="btns center">' + cta("diag", "Записаться на диагностику · 1 000 ₽") + '<a class="btn ghost" href="#navigator">Сначала навигатор</a></div></div>')}'''
+{sec('<div class="band glass rv"><h2>Не знаете, с чего начать?</h2><p>Начните с бесплатного теста или навигатора. Если нужен живой шаг — диагностика 30 минут: её стоимость засчитывается, если вы продолжите работу.</p><div class="btns center">' + cta("diag", "Записаться на диагностику · 1 000 ₽") + '<a class="btn ghost" href="podpiska/">Тарифы ИИ-навигатора</a></div></div>')}'''
     ld = [{"@context": "https://schema.org", "@type": "WebSite", "name": BRAND, "url": SITE, "inLanguage": "ru"},
           {"@context": "https://schema.org", "@type": "Person", "name": "Марина Степанова", "jobTitle": "Психолог, автор и ведущая трансформационных игр и тренингов", "url": SITE + "marina/", "image": SITE + "assets/img/marina.jpg", "sameAs": ["https://t.me/koleso_uspeha"]}]
     layout("", "Внутрикод — расшифруйте свой внутренний код с Мариной Степановой", "Психологическая лаборатория: интерактивный навигатор, 8 бесплатных тестов, энциклопедия, Мини-Лила и живые онлайн-сессии с психологом Мариной Степановой в группах до 8 человек.", body, "home", jsonld=ld, tools=True)
@@ -365,6 +371,7 @@ def prices_page():
     body = hero("Форматы и цены", "Лестница работы с Мариной", "Начните бесплатно, сделайте первый живой шаг за 1 000–1 500 ₽ и идите так глубоко, как нужно. Все сессии — онлайн, вживую, группы до 8 человек.")
     body += sec(ladder(root))
     body += sec(head("Почему такая цена", "Глубина индивидуальной сессии — в малой группе") + '<div class="grid g3"><div class="glass card rv"><h3>До 8 человек</h3><p class="muted">Оптимально 5. Каждый работает со своим запросом, а не слушает лекцию.</p></div><div class="glass card rv"><h3>Пошагово</h3><p class="muted">Распознавание → углубление → разворот в ресурс. В конце — конкретные шаги на 24 часа.</p></div><div class="glass card rv"><h3>Дешевле, чем лично</h3><p class="muted">Индивидуальная сессия у Марины — %s. Тренинг даёт сопоставимую глубину за %s.</p></div></div>' % (price("individ"), price("trening:strah-uspeha")), "alt")
+    body += sec(head("Подписка", "ИИ-навигатор «Колесо успеха»", "Тест и ограниченный диалог — бесплатно. Онлайн-оплата пока не подключена: Марина пришлёт реквизиты в Telegram. Это не медицинская услуга.") + '<div class="grid g3">' + prodcard("navigator-trial", root) + prodcard("navigator-month", root) + prodcard("navigator-year", root) + "</div>")
     body += sec(head("Вход", "Диагностика, клуб и игра") + '<div class="grid g3">' + prodcard("diag", root) + prodcard("klub", root) + prodcard("lila", root) + "</div>")
     body += sec('<div id="mini"></div>' + head("1–1,5 часа · групповая диагностика", "Мини-тренинги", "Смотреть могут многие, активно играют 5–6 участников — каждый уходит с лёгким разворотом.") + '<div class="grid g3">' + minis + "</div>", "alt")
     body += sec('<div id="trening"></div>' + head("2–3 часа · группа до 8", "Трансформационные тренинги") + '<div class="grid g3">' + trs + prodcard("trening:samotsennost", root) + "</div>")
@@ -508,13 +515,15 @@ def reviews_page():
     layout("otzyvy/", "Отзывы участников тренингов и игр", "Реальные отзывы участников тренингов, мини-тренингов и игры «Лила» Марины Степановой.", body, "mar", crumbs=[("otzyvy/", "Отзывы")])
 
 FAQ = [("Что такое Внутрикод?", "Экспериментальная площадка психолога Марины Степановой: энциклопедия, бесплатные тесты и инструменты, а также живые онлайн-сессии с Мариной."),
-       ("Навигатор — это нейросеть?", "Сейчас нет: навигатор работает по заранее подготовленному сценарию прямо в браузере. Если в будущем подключится ИИ-помощник, это будет видно по метке «ИИ-помощник» в окне навигатора."),
+       ("Навигатор — это нейросеть?", "По умолчанию навигатор работает по готовому сценарию прямо в браузере. Если подключён сервер помощника и в окне есть метка «ИИ-помощник», свободный текст уходит на сервер для ответа. Не пишите туда паспортные и медицинские данные."),
        ("Тесты — это диагностика?", "Нет. Это авторские опросники для самонаблюдения. Они не ставят диагнозов и не заменяют консультацию специалиста."),
        ("Как проходят живые сессии?", "Онлайн и вживую с Мариной Степановой. Тренинги — в группах до 8 человек (оптимально 5), 2–3 часа. Можно отвечать голосом или в чате."),
        ("Есть ли записи тренингов?", "Нет: тренинги, мини-тренинги и игры проводятся только вживую — эффект возникает в живой работе. В марафоне «Самопринятие» эфиры остаются в записи."),
        ("С чего начать?", "С бесплатного навигатора или теста. Если хочется живого шага — с диагностики за 1 000 ₽ (засчитывается в покупку) или мини-тренинга за 1 500 ₽."),
-       ("Как записаться и оплатить?", "Нажмите кнопку записи — откроется Telegram Марины (@MarinaNew) с готовым сообщением. Марина пришлёт дату и детали оплаты."),
-       ("Это психотерапия?", "Нет. Это психологическая и трансформационная работа. Она не заменяет медицинскую или психиатрическую помощь."),
+       ("Как записаться и оплатить?", "Нажмите кнопку записи — откроется Telegram Марины (@MarinaNew) с готовым сообщением. Онлайн-оплата на сайте пока не подключена: Марина пришлёт реквизиты. Когда появится платёжная ссылка, её покажет кнопка «Оплатить онлайн»."),
+       ("Сколько стоит ИИ-навигатор?", "Проба — 990 ₽ (5 500 ₸), месяц — 2 490 ₽ (13 500 ₸), год — 19 900 ₽ (107 000 ₸). Живые тренинги и клуб оплачиваются отдельно."),
+       ("Где оферта и политика данных?", "Публичная оферта и политика персональных данных опубликованы на сайте. Реквизиты ИП пока отмечены жёлтой пометкой «ЗАПОЛНИТЬ»."),
+       ("Это психотерапия?", "Нет. Это психологическая и трансформационная работа. Она не является медицинской услугой и не заменяет помощь врача или психиатра."),
        ("Где хранится мой прогресс?", "Только в вашем браузере (localStorage). Сайт не собирает имена, почты и ответы тестов.")]
 def faq_page():
     body = hero("Вопросы", "Частые вопросы", "") + sec("".join('<details class="glass rv"><summary>%s</summary><p>%s</p></details>' % (e(q), e(a)) for q, a in FAQ))
@@ -540,6 +549,26 @@ def privacy():
 <li>Если владелец подключит ИИ-помощника, то текст, который вы сами напишете в окне навигатора, будет отправлен на сервер помощника для ответа. Окно навигатора в этом случае помечено «ИИ-помощник». Не пишите туда персональные данные.</li>
 <li>Если владелец подключит Яндекс.Метрику, она будет собирать обезличенную статистику посещений по правилам Яндекса.</li></ul></div>''')
     layout("konfidencialnost/", "Конфиденциальность", "Внутрикод не собирает персональные данные: прогресс и ответы тестов хранятся только в вашем браузере.", body, "", crumbs=[("konfidencialnost/", "Конфиденциальность")])
+
+def oferta_page():
+    root = "../"
+    body = hero("Документы", "Публичная оферта", "Шаблон договора на информационные и консультационные услуги. Поля с жёлтой пометкой нужно заполнить реквизитами ИП.") + sec(oferta_body(BRAND, SITE, root))
+    layout("oferta/", "Публичная оферта", "Публичная оферта Внутрикода и ИИ-навигатора «Колесо успеха». Реквизиты продавца — шаблон для заполнения.", body, "", crumbs=[("oferta/", "Оферта")])
+
+def politika_page():
+    root = "../"
+    body = hero("Документы", "Политика персональных данных", "Как мы обращаемся с данными. Реквизиты оператора пока отмечены как заглушки.") + sec(politika_body(BRAND, SITE, root))
+    layout("politika/", "Политика персональных данных", "Политика персональных данных Внутрикода: браузер, Telegram, ИИ-помощник. Реквизиты оператора — шаблон.", body, "", crumbs=[("politika/", "Политика персональных данных")])
+
+def podpiska_page():
+    root = "../"
+    body = hero("Подписка · не медицинская услуга", "ИИ-навигатор «Колесо успеха»", "За 2 минуты — тест «Колесо баланса». Затем ежедневный маршрут по методу Марины на этом сайте. За живой глубиной — диагностика или сессия.", '<a class="btn" href="%stesty/koleso/">Пройти бесплатный тест</a><a class="btn ghost" href="https://t.me/koleso_uspeha" target="_blank" rel="noopener">Telegram-канал</a>' % root)
+    left = '<div class="glass box rv"><h2>Что входит</h2>' + ticks(["Бесплатно: тесты, карта дня, энциклопедия и ограниченный диалог с навигатором.", "Подписка: ежедневный маршрут и расширенный диалог с помощником.", "Живые форматы (диагностика, тренинги, сессии, клуб) оплачиваются отдельно.", "Пока ключ ИИ не подключён, помощник отвечает по сценарию — в окне будет соответствующая метка."]) + '</div>'
+    left += '<div class="glass box rv"><h2>Как оформить</h2>' + ticks(["Выберите тариф и напишите Марине в Telegram (готовое сообщение подставится само).", "Онлайн-оплата на сайте пока не подключена — Марина пришлёт реквизиты.", "Документы: оферта и политика персональных данных. Реквизиты ИП отмечены как заглушки."]) + '</div>'
+    body += sec('<div class="lay"><div>%s</div>%s</div>' % (left, buybox("navigator-month", [("Формат", "сайт и, после запуска бота, Telegram"), ("Оплата", "по реквизитам от Марины")], "Оформить месяц")))
+    body += sec(head("Тарифы", "Проба, месяц и год") + '<div class="grid g3">' + prodcard("navigator-trial", root) + prodcard("navigator-month", root) + prodcard("navigator-year", root) + '</div><p class="small muted">Цены в рублях и тенге. <a href="%svazhno/">Это не медицинская услуга</a>.</p>' % root, "alt")
+    body += sec(head("Живой следующий шаг", "Когда нужен человек, а не только навигатор") + '<div class="grid g3">' + prodcard("diag", root) + prodcard("individ", root) + prodcard("klub", root) + "</div>")
+    layout("podpiska/", "ИИ-навигатор «Колесо успеха» — подписка", "Подписка на ИИ-навигатор: проба 990 ₽ (5 500 ₸), месяц 2 490 ₽ (13 500 ₸), год 19 900 ₽ (107 000 ₸). Бесплатный тест «Колесо баланса». Не медицинская услуга.", body, "sub", mcta=cta("navigator-month", "Оформить месяц", "btn sm"), crumbs=[("podpiska/", "Подписка")])
 
 def notfound():
     body = hero("404", "Такой страницы нет", "Зато есть навигатор, который подберёт маршрут.", '<a class="btn" href="%snavigator/">Навигатор</a><a class="btn ghost" href="%sznaniya/">Энциклопедия</a>' % (BASE, BASE))
@@ -572,7 +601,7 @@ if __name__ == "__main__":
     for m in MINIS: mini_page(m)
     for s in T: training_page(s)
     for m in MODULES: module_page(m)
-    flagship(); lila_page(); klub_page(); individual(); diagnostics(); marathons(); psy(); marina_page(); reviews_page(); faq_page(); vazhno(); privacy(); notfound()
+    flagship(); lila_page(); klub_page(); individual(); diagnostics(); marathons(); psy(); marina_page(); reviews_page(); faq_page(); vazhno(); privacy(); oferta_page(); politika_page(); podpiska_page(); notfound()
     catalog_js()
     urls = "".join("<url><loc>%s%s</loc></url>" % (SITE, p) for p, _ in PAGES if not p.endswith(".html"))
     open(os.path.join(OUT, "sitemap.xml"), "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">%s</urlset>' % urls)

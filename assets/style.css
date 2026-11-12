@@ -178,3 +178,14 @@ details{padding:18px 22px;margin-bottom:12px}summary{cursor:pointer;font:700 17p
 @media (max-width:620px){body{font-size:16px}.g2,.g3,.g4,.ladder,.ladder.six{grid-template-columns:1fr}.wrap{width:calc(100% - 28px)}
 .mbar{display:flex;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:80;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(7,6,26,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line)}.mbar .btn{flex:1;padding:12px 10px;font-size:13.5px}
 .giftpop{bottom:80px;right:14px}.cday{grid-template-columns:1fr}.bar{grid-template-columns:110px 1fr 34px}.cell{font-size:0}.cell .cn,.cell::after{font-size:11px}.msg{max-width:94%}.mp-top{grid-template-columns:1fr;justify-items:center;text-align:center}.prose>p{font-size:17px}}
+
+/* ---- Оферта, политика, ИИ-навигатор ---- */
+mark.ph{background:#fff4c2;color:#3a2f10;padding:0 .25em;border-radius:3px;font-weight:700;border-bottom:1px dashed #c9a227;font-style:normal}
+.legal-req .note{margin-bottom:12px}
+.nav-offer{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:22px}
+.nav-offer .pp-sub{display:block;font-size:13px;opacity:.8;margin-top:4px}
+@media(max-width:700px){
+  .btns{flex-wrap:wrap}
+  .btns .btn,.btns .btn.ghost{width:100%;text-align:center;box-sizing:border-box}
+  .hero h1,.hero.home h1{font-size:2rem}
+}

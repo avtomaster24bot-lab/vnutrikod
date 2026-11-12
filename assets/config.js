@@ -17,6 +17,10 @@ window.SITE_CONFIG = {
   /* ---------- ОПЛАТА ----------
      Если для продукта указана ссылка — в окне записи появится кнопка «Оплатить онлайн». */
   paymentLinks: {
+    // ЗАПОЛНИТЬ, когда появится платёжка (Tribute, Prodamus, ЮKassa, Kaspi и т. п.):
+    // "navigator-trial": "https://...",
+    // "navigator-month": "https://...",
+    // "navigator-year": "https://...",
     // "club": "https://t.me/tribute/app?startapp=...",
   },
 
@@ -35,6 +39,9 @@ window.SITE_CONFIG = {
     "individ-paket5":          "35 000 ₽",
     "individ-povtor":          "7 000 ₽",
     "club":                    "1 990 ₽/мес",
+    "navigator-trial":         "990 ₽ / 5 500 ₸",
+    "navigator-month":         "2 490 ₽ / 13 500 ₸",
+    "navigator-year":          "19 900 ₽ / 107 000 ₸",
     "igra-lila":               "3 500 ₽",
     "marafon-dvizhenie":       "2 500 ₽",
     "marafon-samoprinyatie":   "3 500 ₽",
@@ -45,7 +52,10 @@ window.SITE_CONFIG = {
   priceNotes: {
     "igra-lila": "Специальная входная цена. На рынке живая групповая «Лила» с ведущим обычно стоит от 3 000–5 000 ₽ до 15 000 ₽ за участие, бизнес-версии — от 5 000 ₽.",
     "diagnostika": "Стоимость диагностики засчитывается при покупке тренинга, модуля или индивидуальных сессий.",
-    "club": "Предзапись: оплата подписки пока не подключена — Марина пришлёт детали лично."
+    "club": "Предзапись: оплата подписки пока не подключена — Марина пришлёт детали лично.",
+    "navigator-trial": "Онлайн-оплата пока не подключена — Марина пришлёт реквизиты в Telegram.",
+    "navigator-month": "Онлайн-оплата пока не подключена — Марина пришлёт реквизиты в Telegram.",
+    "navigator-year": "Онлайн-оплата пока не подключена — Марина пришлёт реквизиты в Telegram."
   },
   upgradeNote: "Прошли Часть 1? Часть 2 — с доплатой 33 000 ₽ вместо 42 000 ₽.",
 
@@ -67,6 +77,6 @@ window.SITE_CONFIG = {
      POST {messages:[{role,content}], page, mode:"navigator"} и покажет ответ {reply, suggestions?}.
      Если прокси не ответил за 12 секунд, вернул ошибку или пустой ответ — тихо включится сценарий.
      Ключ API НИКОГДА не кладите сюда — только в переменные окружения прокси. */
-  aiEndpoint: "",
+  aiEndpoint: "https://sfgrwquitlnzlkyzashb.supabase.co/functions/v1/kod-zhizni-ai/chat",
   aiTimeoutMs: 12000
 };
