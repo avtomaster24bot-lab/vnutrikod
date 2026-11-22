@@ -1,26 +1,26 @@
 {
  "diagnostika": {
-  "hash": "f8b1b8700ad4",
-  "duration": 99.6,
-  "bytes": 598349,
+  "hash": "cfc13390ec27",
+  "duration": 126.0,
+  "bytes": 756749,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "individualno": {
-  "hash": "58edf141c7d1",
-  "duration": 113.5,
-  "bytes": 681591,
+  "hash": "ba9a0c8bb1a9",
+  "duration": 129.0,
+  "bytes": 774183,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "klub": {
-  "hash": "93d7a4b82b4f",
-  "duration": 102.5,
-  "bytes": 615495,
+  "hash": "8901a676eaae",
+  "duration": 122.6,
+  "bytes": 736023,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "koleso-uspeha": {
-  "hash": "06104d851a62",
-  "duration": 135.0,
-  "bytes": 810748,
+  "hash": "788f56115fc3",
+  "duration": 131.2,
+  "bytes": 787852,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "lila": {
@@ -30,15 +30,15 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "marafon-dvizhenie-k-celi": {
-  "hash": "b8f15076b9e2",
-  "duration": 92.2,
-  "bytes": 553419,
+  "hash": "c6a4aaa5fd8b",
+  "duration": 119.9,
+  "bytes": 719595,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "marafon-samoprinyatie": {
-  "hash": "0381b99d8f42",
-  "duration": 96.5,
-  "bytes": 579191,
+  "hash": "a4f4e0417615",
+  "duration": 144.5,
+  "bytes": 867335,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "mini-bazovyj-strah": {
@@ -60,15 +60,15 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "mini-istoki-konfliktov": {
-  "hash": "7a476fb47724",
-  "duration": 123.0,
-  "bytes": 738830,
+  "hash": "6e72d0e823ab",
+  "duration": 134.2,
+  "bytes": 805790,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "mini-kontrol": {
-  "hash": "ddb795a23e26",
+  "hash": "3cb947740dba",
   "duration": 121.9,
-  "bytes": 731726,
+  "bytes": 731870,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "mini-samozvanets": {
@@ -90,39 +90,39 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "modul-1": {
-  "hash": "5156bcf96543",
-  "duration": 99.8,
-  "bytes": 599502,
+  "hash": "d46da6e101be",
+  "duration": 135.8,
+  "bytes": 815358,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "modul-2": {
-  "hash": "a624e372c750",
-  "duration": 104.1,
-  "bytes": 625149,
+  "hash": "e2b779be61de",
+  "duration": 153.6,
+  "bytes": 922221,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "modul-3": {
-  "hash": "1d21223c28a1",
-  "duration": 101.4,
-  "bytes": 608634,
+  "hash": "8df7e67d6db4",
+  "duration": 143.6,
+  "bytes": 861930,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "modul-4": {
-  "hash": "2fbd079963fe",
-  "duration": 94.5,
-  "bytes": 567552,
+  "hash": "894760b60e4f",
+  "duration": 141.2,
+  "bytes": 847488,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "modul-5": {
-  "hash": "62d62fab685d",
-  "duration": 102.6,
-  "bytes": 615987,
+  "hash": "7c4f4b8c6223",
+  "duration": 152.6,
+  "bytes": 916083,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "modul-6": {
-  "hash": "df9d764371d4",
-  "duration": 95.6,
-  "bytes": 574042,
+  "hash": "b2a7b9176352",
+  "duration": 125.2,
+  "bytes": 751594,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "psihologam": {
@@ -138,15 +138,15 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-bazovyj-strah": {
-  "hash": "e63d14aedf96",
-  "duration": 139.9,
-  "bytes": 839750,
+  "hash": "9271054538b2",
+  "duration": 125.7,
+  "bytes": 754934,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-dejstvuj-kak": {
-  "hash": "bcf79e02a5ab",
-  "duration": 143.6,
-  "bytes": 862203,
+  "hash": "c0ca926ebca8",
+  "duration": 133.4,
+  "bytes": 801003,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-dengi-iz-detstva": {
@@ -168,39 +168,39 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-fundament-starta": {
-  "hash": "431554aed1dd",
-  "duration": 137.8,
-  "bytes": 827062,
+  "hash": "b5f35e8e3442",
+  "duration": 156.4,
+  "bytes": 938806,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-istinnost-celi": {
-  "hash": "35120567a25f",
-  "duration": 148.0,
-  "bytes": 888525,
+  "hash": "c45371cd8617",
+  "duration": 142.1,
+  "bytes": 852813,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-kak-ozvuchivat-cenu": {
-  "hash": "2a2e7678e466",
+  "hash": "c854d99cd771",
   "duration": 133.5,
   "bytes": 801593,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-konflikty-v-rost": {
-  "hash": "4a17a0df88bb",
+  "hash": "cb51ff523983",
   "duration": 132.7,
-  "bytes": 796813,
+  "bytes": 796957,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-konkretnye-shagi": {
-  "hash": "345e5db6e1f4",
-  "duration": 129.2,
-  "bytes": 775768,
+  "hash": "66a19a085349",
+  "duration": 140.8,
+  "bytes": 845464,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-koroli-prokrastinacii": {
-  "hash": "3b0ec168e68f",
-  "duration": 130.1,
-  "bytes": 781097,
+  "hash": "efba65f15abf",
+  "duration": 119.3,
+  "bytes": 716441,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-lider-a-ne-nyanka": {
@@ -210,9 +210,9 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-moj-produkt-krutoj": {
-  "hash": "4cff6e88a7bb",
-  "duration": 135.5,
-  "bytes": 813346,
+  "hash": "61c2b87d259f",
+  "duration": 146.5,
+  "bytes": 879298,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-moya-bogataya-zhizn": {
@@ -228,9 +228,9 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-perfekcionizm": {
-  "hash": "6bae96e6a754",
-  "duration": 134.3,
-  "bytes": 806049,
+  "hash": "cf40258aaddc",
+  "duration": 143.3,
+  "bytes": 860481,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-proyavlyajsya-legko": {
@@ -240,15 +240,15 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-samoocenka": {
-  "hash": "8d3d73563f9b",
-  "duration": 128.2,
-  "bytes": 769590,
+  "hash": "e42c01c0238a",
+  "duration": 140.1,
+  "bytes": 840870,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-samotsennost": {
-  "hash": "ddbe2aa9a9c2",
-  "duration": 142.9,
-  "bytes": 857773,
+  "hash": "ba23c6b57c8d",
+  "duration": 131.8,
+  "bytes": 791245,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-samozvanets-strah-razoblacheniya": {
@@ -264,15 +264,15 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-strah-uspeha": {
-  "hash": "137742c8b4d7",
+  "hash": "465b436e9a1f",
   "duration": 156.2,
   "bytes": 937644,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-vsyo-nachinaetsya-s-mechty": {
-  "hash": "f2891063948f",
-  "duration": 131.9,
-  "bytes": 791753,
+  "hash": "28d7c593c017",
+  "duration": 152.5,
+  "bytes": 915593,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-vsyo-pod-kontrolem": {
@@ -288,9 +288,9 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-bazovyj-strah": {
-  "hash": "a5ef78bcd21b",
-  "duration": 152.5,
-  "bytes": 915446,
+  "hash": "d2d110f44515",
+  "duration": 144.5,
+  "bytes": 867350,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-biznes-lila": {
@@ -300,75 +300,75 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-delegirovanie": {
-  "hash": "c9d13fb77255",
-  "duration": 156.5,
-  "bytes": 939662,
+  "hash": "b9b4032e68c5",
+  "duration": 127.1,
+  "bytes": 763118,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-dengi-scenarii": {
-  "hash": "33c394de0e4c",
-  "duration": 162.2,
-  "bytes": 973496,
+  "hash": "e09c72ddf7f9",
+  "duration": 139.8,
+  "bytes": 839144,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-detskie-scenarii": {
-  "hash": "eec57b650c8e",
-  "duration": 152.0,
-  "bytes": 912588,
+  "hash": "37f5fb2bba57",
+  "duration": 139.2,
+  "bytes": 835836,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-emocionalnyj-intellekt": {
-  "hash": "22cabf598568",
-  "duration": 152.9,
-  "bytes": 917593,
+  "hash": "e3dc39f537a4",
+  "duration": 126.5,
+  "bytes": 759193,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-finansovyj-potolok": {
-  "hash": "62cbc9b3d0ae",
-  "duration": 170.9,
-  "bytes": 1025727,
+  "hash": "cf55fb221e3f",
+  "duration": 147.4,
+  "bytes": 884607,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-giperkontrol": {
-  "hash": "3f3217d65160",
-  "duration": 162.2,
-  "bytes": 973734,
+  "hash": "662365867b02",
+  "duration": 158.5,
+  "bytes": 951270,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-giperotvetstvennost": {
-  "hash": "5ba2c550b251",
-  "duration": 138.6,
-  "bytes": 831799,
+  "hash": "7af22fc1c718",
+  "duration": 165.9,
+  "bytes": 995671,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-igra-lila": {
-  "hash": "34f61046a80a",
-  "duration": 158.1,
-  "bytes": 949139,
+  "hash": "9f9252974586",
+  "duration": 145.0,
+  "bytes": 870515,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-kak-nazyvat-cenu": {
-  "hash": "27af8868f41d",
-  "duration": 159.4,
-  "bytes": 956783,
+  "hash": "20a53f4acfaf",
+  "duration": 141.2,
+  "bytes": 847631,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-kletki-lily": {
-  "hash": "ae98100afa03",
-  "duration": 164.0,
-  "bytes": 984426,
+  "hash": "fc21221d576d",
+  "duration": 160.0,
+  "bytes": 960378,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-kognitivnye-iskazheniya": {
-  "hash": "020ffbd7db8f",
-  "duration": 155.5,
-  "bytes": 933717,
+  "hash": "b5146e5d91e3",
+  "duration": 152.3,
+  "bytes": 914277,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-konflikty": {
-  "hash": "2e5ee64cd42e",
-  "duration": 157.1,
-  "bytes": 942937,
+  "hash": "29d11756b99c",
+  "duration": 169.7,
+  "bytes": 1018537,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-mak-karty": {
@@ -378,69 +378,69 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-mechta-i-cel": {
-  "hash": "d5f8637d9ce6",
-  "duration": 153.3,
-  "bytes": 920503,
+  "hash": "34c2dbade7c7",
+  "duration": 132.2,
+  "bytes": 793783,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-meditaciya-i-vnimanie": {
-  "hash": "70ce6f2769dd",
-  "duration": 150.3,
-  "bytes": 902178,
+  "hash": "fee08adff0bf",
+  "duration": 155.4,
+  "bytes": 932994,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-neyroplastichnost-i-privychki": {
-  "hash": "c2efb5c363ab",
-  "duration": 154.1,
-  "bytes": 924802,
+  "hash": "f4f4b2142372",
+  "duration": 144.2,
+  "bytes": 865474,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-perfekcionizm": {
-  "hash": "0e4df4ed2aa9",
-  "duration": 162.3,
-  "bytes": 974494,
+  "hash": "d9457fcc668c",
+  "duration": 153.6,
+  "bytes": 922366,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-prokrastinaciya": {
-  "hash": "465cadd8149b",
-  "duration": 169.2,
-  "bytes": 1015384,
+  "hash": "8f5f3fd8ee8b",
+  "duration": 150.6,
+  "bytes": 904072,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-proyavlennost": {
-  "hash": "baa07aa1f367",
-  "duration": 149.6,
-  "bytes": 897888,
+  "hash": "bfa0b1c3d79b",
+  "duration": 162.6,
+  "bytes": 976080,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-psihologicheskie-zashchity": {
-  "hash": "7502042bd6d1",
-  "duration": 161.4,
-  "bytes": 968711,
+  "hash": "6007a4195285",
+  "duration": 133.0,
+  "bytes": 798503,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-samocennost-i-samoocenka": {
-  "hash": "8e5e4ede2062",
-  "duration": 159.5,
-  "bytes": 957510,
+  "hash": "8ff38cc01473",
+  "duration": 144.2,
+  "bytes": 865494,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-sindrom-samozvanca": {
-  "hash": "d768c0b434e8",
-  "duration": 138.4,
-  "bytes": 831039,
+  "hash": "67fc8f03c698",
+  "duration": 162.0,
+  "bytes": 972735,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-strah-uspeha": {
-  "hash": "6f7c29b554c3",
-  "duration": 144.3,
-  "bytes": 866019,
+  "hash": "d31b237fd4cc",
+  "duration": 142.7,
+  "bytes": 856803,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-teoriya-privyazannosti": {
-  "hash": "870a8d8566c9",
-  "duration": 157.4,
-  "bytes": 945091,
+  "hash": "5ad2985311d9",
+  "duration": 148.5,
+  "bytes": 891379,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-transformacionnye-igry": {
@@ -456,33 +456,33 @@
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-treugolnik-karpmana": {
-  "hash": "0dc9c00e4e1f",
-  "duration": 139.3,
-  "bytes": 836147,
+  "hash": "751cc7bb9a93",
+  "duration": 124.3,
+  "bytes": 746147,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-vnutrennij-kritik": {
-  "hash": "69ee3291f315",
-  "duration": 156.3,
-  "bytes": 938207,
+  "hash": "6d31613e3e64",
+  "duration": 148.9,
+  "bytes": 893999,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-vygoranie": {
-  "hash": "ff3616447112",
-  "duration": 155.0,
-  "bytes": 930238,
+  "hash": "bbce2b361bcc",
+  "duration": 136.7,
+  "bytes": 820654,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-vyuchennaya-bespomoshchnost": {
-  "hash": "4cffeb108686",
-  "duration": 156.1,
-  "bytes": 936929,
+  "hash": "f7fcc247d030",
+  "duration": 134.6,
+  "bytes": 807905,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "znaniya-zona-komforta": {
-  "hash": "40b3e9b9da16",
-  "duration": 154.9,
-  "bytes": 929836,
+  "hash": "934b60ab62d6",
+  "duration": 141.8,
+  "bytes": 851212,
   "voice": "ru-RU-SvetlanaNeural"
  }
 }
