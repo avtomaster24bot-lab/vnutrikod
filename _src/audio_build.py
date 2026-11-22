@@ -35,7 +35,7 @@ async def tts_piece(c, f):
     import edge_tts
     for k in range(8):   # сервис периодически отвечает «No audio received» — повторяем кусок
         try:
-            await asyncio.wait_for(edge_tts.Communicate(c, VOICE, rate=RATE, pitch=PITCH).save(f), timeout=90)
+            await asyncio.wait_for(edge_tts.Communicate(c, VOICE, rate=RATE, pitch=PITCH).save(f), timeout=float(os.getenv("TTS_TIMEOUT", "30")))
             if os.path.getsize(f) < 1500: raise RuntimeError("empty chunk")
             return
         except Exception as ex:
