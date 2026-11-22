@@ -17,7 +17,7 @@ OUT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://avtomaster24bot-lab.github.io/vnutrikod/"
 BASE = "/vnutrikod/"
 BRAND = "Внутрикод"
-V = "12"
+V = "13"
 KOLESO = "https://avtomaster24bot-lab.github.io/koleso-uspeha/"
 TG = "https://t.me/MarinaNew"
 PAGES = []
@@ -625,14 +625,14 @@ def podcast_rss(have):
         link = SITE + x["url"] + "?utm_source=podcast&utm_medium=audio&utm_campaign=" + x["id"]
         desc = "%s · %s. %s Страница: %s" % (x.get("path_title", ""), x["kind"], re.sub(r"\s+", " ", x["text"])[:300].rsplit(" ", 1)[0] + "…", link)
         items += ("<item><title>%s</title><description>%s</description><link>%s</link><guid isPermaLink=\"false\">vnutrikod-%s</guid><pubDate>%s</pubDate>"
-                  "<enclosure url=\"%s\" length=\"%d\" type=\"audio/mpeg\"/><itunes:duration>%d</itunes:duration><itunes:episodeType>full</itunes:episodeType><itunes:explicit>false</itunes:explicit></item>") % (
-            e(x["title"]), e(desc), e(link), x["id"] + "-" + m["hash"][:6], format_datetime(base - timedelta(minutes=i)), url, m["bytes"], int(m["duration"]))
+                  "<enclosure url=\"%s\" length=\"%d\" type=\"audio/mpeg\"/><itunes:duration>%d</itunes:duration><itunes:episode>%d</itunes:episode><itunes:episodeType>full</itunes:episodeType><itunes:explicit>false</itunes:explicit></item>") % (
+            e(x["title"]), e(desc), e(link), x["id"] + "-" + m["hash"][:6], format_datetime(base + timedelta(minutes=i)), url, m["bytes"], int(m["duration"]), i + 1)
     rss = ('<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom"><channel>'
            '<title>Внутрикод — слушать</title><link>%sslushat/</link><atom:link href="%sslushat/podcast.xml" rel="self" type="application/rss+xml"/><language>ru</language>'
            '<description>Аудио-объяснения программ психолога Марины Степановой и статьи энциклопедии «Внутрикод» вслух. Озвучено синтезированным голосом диктора. Живые онлайн-встречи проводит Марина: t.me/MarinaNew</description>'
            '<itunes:author>Марина Степанова · Внутрикод</itunes:author><itunes:summary>Психология простым языком: деньги, страхи, контроль, конфликты, самоценность, цели и игра «Лила».</itunes:summary>'
            '<itunes:image href="%sassets/podcast-cover.png"/><image><url>%sassets/podcast-cover.png</url><title>Внутрикод — слушать</title><link>%sslushat/</link></image>'
-           '<itunes:category text="Health &amp; Fitness"><itunes:category text="Mental Health"/></itunes:category><itunes:explicit>false</itunes:explicit><itunes:type>episodic</itunes:type>%s</channel></rss>') % (SITE, SITE, SITE, SITE, SITE, items)
+           '<itunes:category text="Health &amp; Fitness"><itunes:category text="Mental Health"/></itunes:category><itunes:explicit>false</itunes:explicit><itunes:type>serial</itunes:type>%s</channel></rss>') % (SITE, SITE, SITE, SITE, SITE, items)
     os.makedirs(os.path.join(OUT, "slushat"), exist_ok=True)
     open(os.path.join(OUT, "slushat/podcast.xml"), "w", encoding="utf-8").write(rss)
 
