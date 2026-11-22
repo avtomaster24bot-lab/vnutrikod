@@ -251,3 +251,4 @@ mark.ph{background:#fff4c2;color:#3a2f10;padding:0 .25em;border-radius:3px;font-
 @media (max-width:620px){.hero.hasimg>.wrap>.himg{aspect-ratio:16/6;margin-top:16px}}
 .sec .encbar{margin:0 0 22px}.hero.home .aud{margin:18px 0}
 @media(max-width:560px){.aud:not(.compact){align-items:flex-start}}
+.cthumb+.cplay{left:12px;right:auto}
