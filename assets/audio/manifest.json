@@ -5,10 +5,76 @@
   "bytes": 756749,
   "voice": "ru-RU-SvetlanaNeural"
  },
+ "format-mini": {
+  "hash": "8fee97492128",
+  "duration": 57.8,
+  "bytes": 347542,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "format-modul": {
+  "hash": "87dcf9fcb904",
+  "duration": 56.1,
+  "bytes": 337144,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "format-trening": {
+  "hash": "222ec34cc6cc",
+  "duration": 57.1,
+  "bytes": 343331,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
  "individualno": {
   "hash": "ba9a0c8bb1a9",
   "duration": 129.0,
   "bytes": 774183,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "kat-celi": {
+  "hash": "fbe0b8c5741d",
+  "duration": 57.3,
+  "bytes": 344474,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "kat-dengi": {
+  "hash": "987d470594e8",
+  "duration": 63.5,
+  "bytes": 381474,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "kat-igry": {
+  "hash": "8d4e4971b43a",
+  "duration": 67.8,
+  "bytes": 407278,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "kat-konflikty": {
+  "hash": "a232d1ccbe6d",
+  "duration": 62.3,
+  "bytes": 374446,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "kat-kontrol": {
+  "hash": "da77dba191a7",
+  "duration": 58.7,
+  "bytes": 352556,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "kat-mozg": {
+  "hash": "886c7ad5997a",
+  "duration": 67.0,
+  "bytes": 402514,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "kat-samoocenka": {
+  "hash": "a9f941c3fcd8",
+  "duration": 66.6,
+  "bytes": 399806,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "kat-strahi": {
+  "hash": "5df8858ba538",
+  "duration": 69.5,
+  "bytes": 417492,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "klub": {
@@ -131,10 +197,136 @@
   "bytes": 743488,
   "voice": "ru-RU-SvetlanaNeural"
  },
+ "razdel-7-dnej": {
+  "hash": "5ce26cbf8b1f",
+  "duration": 60.9,
+  "bytes": 365959,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-ceny": {
+  "hash": "5c210690cd02",
+  "duration": 67.8,
+  "bytes": 407135,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-chek-listy": {
+  "hash": "a811c14bab2e",
+  "duration": 58.6,
+  "bytes": 351843,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-dyhanie": {
+  "hash": "766baa44711b",
+  "duration": 66.1,
+  "bytes": 397341,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-faq": {
+  "hash": "1d67adcf7eb3",
+  "duration": 64.5,
+  "bytes": 387401,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-karta-dnya": {
+  "hash": "feb4307ed381",
+  "duration": 64.1,
+  "bytes": 384961,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-marina": {
+  "hash": "a3df1c72ae8e",
+  "duration": 61.7,
+  "bytes": 370397,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-mini-lila": {
+  "hash": "c5548c5dd5ca",
+  "duration": 65.5,
+  "bytes": 393317,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-moj-put": {
+  "hash": "da0bba314f76",
+  "duration": 51.4,
+  "bytes": 308916,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-navigator": {
+  "hash": "34a56ffd0ed3",
+  "duration": 59.1,
+  "bytes": 355293,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-podarki": {
+  "hash": "0d551aaa53af",
+  "duration": 58.4,
+  "bytes": 350708,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-testy": {
+  "hash": "3e25f8377132",
+  "duration": 71.1,
+  "bytes": 427159,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-znaniya": {
+  "hash": "19b2c87f0e41",
+  "duration": 63.4,
+  "bytes": 380779,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
  "start": {
   "hash": "9dae64020f33",
   "duration": 176.0,
   "bytes": 1056286,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "test-dengi": {
+  "hash": "48fe8e1c05be",
+  "duration": 54.6,
+  "bytes": 328209,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "test-karpman": {
+  "hash": "0129bf93216e",
+  "duration": 50.5,
+  "bytes": 303444,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "test-koleso": {
+  "hash": "1e9ed0d6e1a6",
+  "duration": 50.6,
+  "bytes": 303860,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "test-kontrol": {
+  "hash": "c0d83622c08c",
+  "duration": 48.0,
+  "bytes": 288178,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "test-perfekcionizm": {
+  "hash": "4b690381962c",
+  "duration": 49.1,
+  "bytes": 295260,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "test-resurs": {
+  "hash": "8330d9b12afa",
+  "duration": 49.5,
+  "bytes": 297530,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "test-samozvanec": {
+  "hash": "a21d41a82807",
+  "duration": 53.5,
+  "bytes": 321434,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "test-tormoza": {
+  "hash": "a017eda8d0fa",
+  "duration": 51.4,
+  "bytes": 308909,
   "voice": "ru-RU-SvetlanaNeural"
  },
  "trening-bazovyj-strah": {
@@ -483,78 +675,6 @@
   "hash": "934b60ab62d6",
   "duration": 141.8,
   "bytes": 851212,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-podarki": {
-  "hash": "0d551aaa53af",
-  "duration": 58.4,
-  "bytes": 350708,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-ceny": {
-  "hash": "5c210690cd02",
-  "duration": 67.8,
-  "bytes": 407135,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-znaniya": {
-  "hash": "19b2c87f0e41",
-  "duration": 63.4,
-  "bytes": 380779,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-karta-dnya": {
-  "hash": "feb4307ed381",
-  "duration": 64.1,
-  "bytes": 384961,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-mini-lila": {
-  "hash": "c5548c5dd5ca",
-  "duration": 65.5,
-  "bytes": 393317,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-testy": {
-  "hash": "3e25f8377132",
-  "duration": 71.1,
-  "bytes": 427159,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-7-dnej": {
-  "hash": "5ce26cbf8b1f",
-  "duration": 60.9,
-  "bytes": 365959,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-chek-listy": {
-  "hash": "a811c14bab2e",
-  "duration": 58.6,
-  "bytes": 351843,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-dyhanie": {
-  "hash": "766baa44711b",
-  "duration": 66.1,
-  "bytes": 397341,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-marina": {
-  "hash": "a3df1c72ae8e",
-  "duration": 61.7,
-  "bytes": 370397,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-moj-put": {
-  "hash": "da0bba314f76",
-  "duration": 51.4,
-  "bytes": 308916,
-  "voice": "ru-RU-SvetlanaNeural"
- },
- "razdel-faq": {
-  "hash": "1d67adcf7eb3",
-  "duration": 64.5,
-  "bytes": 387401,
   "voice": "ru-RU-SvetlanaNeural"
  }
 }

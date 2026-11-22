@@ -679,7 +679,7 @@ def slushat_page():
     rest = [x for x in have if x["id"] not in seen]
     if rest: body += sec(head("Ещё", "Другие выпуски") + '<div class="aud-list">%s</div>' % "".join(audio_block(x, root, compact=True, link=True) for x in rest))
     ld = {"@context": "https://schema.org", "@type": "PodcastSeries", "name": "Внутрикод — слушать", "url": SITE + "slushat/", "webFeed": SITE + "slushat/podcast.xml", "inLanguage": "ru", "author": {"@type": "Person", "name": "Марина Степанова"}}
-    layout("slushat/", "Слушать: аудио-маршруты по программам и статьям", "Аудио-маршруты «Внутрикода»: вступление, 7 тем, %d выпусков — от бесплатных статей к живой работе с Мариной Степановой. RSS-подкаст." % len(have), body, "zn", jsonld=ld, crumbs=[("slushat/", "Слушать")])
+    layout("slushat/", "Слушать: аудио-маршруты по программам и статьям", "Аудио-маршруты «Внутрикода»: вступление, 7 тем, разделы, тесты и рубрики — %d выпусков — от бесплатных статей к живой работе с Мариной Степановой. RSS-подкаст." % len(have), body, "zn", jsonld=ld, crumbs=[("slushat/", "Слушать")])
     podcast_rss([x for x in AUDIO if x["id"] in AMAN])
 
 def podcast_rss(have):
