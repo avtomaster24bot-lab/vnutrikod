@@ -29,7 +29,7 @@ def clean(items): return [x for x in items if not BAD.search(x)]
 
 def tts(s):
     """Подготовка текста к озвучке."""
-    rep = [("1–1,5 часа", "от часа до полутора часов"), ("2–3 часа", "два-три часа"), ("1–2 часа", "один-два часа"),
+    rep = [("1–1,5 часа", "час-полтора"), ("2–3 часа", "два-три часа"), ("1–2 часа", "один-два часа"),
            ("1 на 1", "один на один"), ("Т-игр", "трансформационных игр"), ("МАК-карт", "метафорических карт"),
            ("МАК", "метафорические карты"), ("«", "«"), ("т.д.", "так далее"), ("т.п.", "тому подобное"),
            ("—", " — "), ("…", "..."), ("+", " плюс ")]
@@ -205,9 +205,77 @@ for s, a in ARTICLES.items():
         t = build()
     add("znaniya-" + s, "znaniya/%s/" % s, a["title"], "Статья", a["cat"], t)
 
+SCRIPTS_OLD = SCRIPTS   # прежние (описательные) тексты — факты для генерации новых
+
+# ================================================================== новая версия: продающие аудио-истории + маршрут
+import json as _json
+from audio_journey import plan, PATHS, START, TEST_BY_PATH
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_tf = os.path.join(_HERE, "audio_texts.json")
+TEXTS = _json.load(open(_tf, encoding="utf-8")) if os.path.exists(_tf) else {}
+TITLE = {x["id"]: x["title"] for x in SCRIPTS_OLD}
+TITLE[START] = "С чего начать: что такое «Внутрикод»"
+PLAN = plan([x["id"] for x in SCRIPTS_OLD])
+PLAN[START]["next"] = [PATHS[k][1][0] for k in ("samozvanec", "dengi", "strahi", "otnosheniya", "prednaznachenie", "lila")]
+DISCLAIMER = "Озвучено голосом диктора — а вживую с вами работает сама Марина."
+
+def spoken(i):
+    t = TITLE[i]
+    if i.startswith("znaniya-"): return "аудио «%s»" % t
+    return "аудио: " + t[0].lower() + t[1:]
+
+def cta_line(i):
+    pl = PLAN[i]
+    if i.startswith("znaniya-"):
+        name, _ = TEST_BY_PATH[pl["path"]]
+        if "Мини-Лила" in name: return "А прямо сейчас можно сыграть в бесплатную «Мини-Лилу» на сайте — это займёт минут десять."
+        return "А прямо сейчас пройдите на сайте %s — это бесплатно и займёт несколько минут." % name
+    if i.startswith("mini-") or i == "diagnostika":
+        return "Записаться можно кнопкой «Записаться» на этой странице: откроется сообщение Марине в Телеграме, и любые вопросы можно задать до оплаты."
+    if i == "klub": return "Записаться в клуб можно кнопкой на этой странице — Марина пришлёт детали лично."
+    return "Не уверены, что это ваш формат? Начните с личной диагностики — тридцать минут один на один с Мариной. Или сразу нажмите «Записаться» на этой странице."
+
+def compose(i):
+    if i == START:
+        return open(os.path.join(_HERE, "audio_entry.txt"), encoding="utf-8").read().strip()
+    d = TEXTS.get(i)
+    nx = PLAN[i]["next"]
+    body = d["text"] if d else None
+    if not body: return None
+    out = body.strip() + "\n\n" + d.get("teaser", "").strip()
+    out += "\n\nЕсли вы узнали себя — следующим послушайте %s." % spoken(nx[0])
+    if len(nx) > 1: out += " А если хочется зайти с другой стороны — %s." % spoken(nx[1])
+    out += "\n\n" + cta_line(i) + "\n\n" + DISCLAIMER
+    return out
+
+def tts_par(text):
+    return "\n\n".join(tts(p) for p in re.split(r"\n\s*\n", text) if p.strip())
+
+def journey_order():
+    seen, out = set(), [START]
+    for k in ("samozvanec", "dengi", "strahi", "otnosheniya", "prednaznachenie", "lila", "psy"):
+        for i in PATHS[k][1]:
+            if i not in seen and i in TITLE: seen.add(i); out.append(i)
+    for x in SCRIPTS_OLD:
+        if x["id"] not in seen: out.append(x["id"])
+    return out
+
+_old = {x["id"]: x for x in SCRIPTS_OLD}
+PATH_TITLE = {k: v[0] for k, v in PATHS.items()}
+SCRIPTS = []
+for i in journey_order():
+    txt = compose(i)
+    if txt is None:   # нет нового текста — оставляем прежний
+        txt = _old[i]["text"]
+    base = _old.get(i, dict(id=START, url="slushat/", title=TITLE[START], kind="Старт", topic="celi"))
+    SCRIPTS.append(dict(id=i, url=base["url"], title=TITLE[i], kind=base["kind"], topic=base["topic"], text=tts_par(txt),
+                        path=PLAN[i]["path"], path_title=PATH_TITLE.get(PLAN[i]["path"], "Вход"), next=PLAN[i]["next"], new=(i in TEXTS or i == START)))
+BY_ID = {x["id"]: x for x in SCRIPTS}
 BY_URL = {x["url"]: x for x in SCRIPTS}
+EXTRA_PAGES = {"": START}   # главная тоже показывает вступительное аудио
 
 if __name__ == "__main__":
+    print("new:", sum(1 for x in SCRIPTS if x["new"]), "/", len(SCRIPTS))
     tot = 0
     for x in SCRIPTS:
         w = len(x["text"].split()); tot += w

@@ -208,3 +208,11 @@ mark.ph{background:#fff4c2;color:#3a2f10;padding:0 .25em;border-radius:3px;font-
 .aud.compact{margin:0;padding:14px 16px;gap:14px}.aud.compact .aud-play{width:46px;height:46px}.aud.compact .aud-play svg{width:20px;height:20px}
 .aud-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 @media(max-width:560px){.aud{padding:14px;gap:12px}.aud-play{width:52px;height:52px}.aud-list{grid-template-columns:1fr}}
+.aud-next{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.aud-nh{font:700 12px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--c1);margin-right:4px}
+.aud-ni{display:inline-flex;align-items:center;gap:4px}
+.aud-nb{background:rgba(124,247,255,.08);border:1px solid rgba(124,247,255,.35);color:var(--ink);border-radius:99px;padding:7px 14px;font:700 13px var(--sans);cursor:pointer;text-align:left}
+.aud-nb:hover{background:rgba(124,247,255,.18)}.aud-nb i{font-style:normal;color:var(--mut);font-weight:600;margin-left:4px}
+.aud-nl{color:var(--mut);text-decoration:none;font-size:14px;padding:4px}.aud-nl:hover{color:var(--c1)}
+.aud-auto{font-size:12.5px;color:var(--mut);display:inline-flex;gap:6px;align-items:center;margin-left:auto}
+.no-js .aud-next{display:none}
