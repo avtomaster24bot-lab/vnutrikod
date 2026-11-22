@@ -245,5 +245,42 @@
     $$("[data-playall]").forEach(function(b){ b.addEventListener("click", function(ev){ ev.preventDefault(); auto = true; $(".aud-play", boxes[0]).click(); }); });
   })();
 
+  /* ---------- ▶ на карточках: нижний мини-плеер ---------- */
+  (function(){
+    var btns = $$("[data-cplay]"); if(!btns.length) return;
+    var dock = null, au = null, curBtn = null, item = null;
+    function fmt(s){ s = Math.floor(s||0); return Math.floor(s/60) + ":" + ("0" + s%60).slice(-2); }
+    function build(){
+      dock = document.createElement("div"); dock.className = "adock"; dock.setAttribute("role", "region"); dock.setAttribute("aria-label", "Мини-плеер"); dock.hidden = true;
+      dock.innerHTML = '<button class="adock-p" type="button" aria-label="Пауза или продолжить"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5v14l11-7z"/><path class="i-pause" d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>' +
+        '<div class="adock-b"><a class="adock-t" href="#"></a><div class="adock-bar" aria-hidden="true"><i></i></div></div><span class="adock-m"><span data-c>0:00</span> / <span data-d>0:00</span></span><button class="adock-x" type="button" aria-label="Закрыть плеер">×</button>';
+      document.body.appendChild(dock);
+      au = new Audio(); au.preload = "none";
+      $(".adock-p", dock).addEventListener("click", function(){ if(au.paused){ start(); } else au.pause(); });
+      $(".adock-x", dock).addEventListener("click", function(){ au.pause(); dock.hidden = true; mark(null); });
+      $(".adock-bar", dock).addEventListener("click", function(ev){ var r = this.getBoundingClientRect(); if(au.duration) au.currentTime = Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)) * au.duration; });
+      au.addEventListener("play", function(){ dock.classList.add("playing"); if(curBtn) curBtn.classList.add("on"); goal("audio_play", {id: item && item.id, from: "card"}); });
+      au.addEventListener("pause", function(){ dock.classList.remove("playing"); if(curBtn) curBtn.classList.remove("on"); });
+      au.addEventListener("ended", function(){ dock.classList.remove("playing"); mark(null); });
+      au.addEventListener("timeupdate", function(){ var p = au.duration ? au.currentTime / au.duration * 100 : 0; $(".adock-bar i", dock).style.width = p + "%"; $("[data-c]", dock).textContent = fmt(au.currentTime); if(item && !item.counted && p > 60){ item.counted = true; award("gifts", "audio:" + item.id); } });
+      // играет другой плеер на странице — ставим мини-плеер на паузу
+      document.addEventListener("play", function(ev){ if(ev.target !== au && au && !au.paused) au.pause(); }, true);
+    }
+    function mark(b){ if(curBtn) curBtn.classList.remove("on"); curBtn = b; }
+    function start(){ $$("audio").forEach(function(x){ if(x !== au) x.pause(); }); var p = au.play(); if(p && p.catch) p.catch(function(){}); }
+    function open(b){
+      var d; try { d = JSON.parse(b.dataset.cplay); } catch(e){ return; }
+      if(!dock) build();
+      if(item && item.id === d.id && curBtn === b){ if(au.paused) start(); else au.pause(); return; }
+      item = d; mark(b); au.src = d.src; dock.hidden = false;
+      var t = $(".adock-t", dock); t.textContent = d.t; t.href = d.u; $("[data-d]", dock).textContent = d.d; $("[data-c]", dock).textContent = "0:00"; $(".adock-bar i", dock).style.width = "0%";
+      start();
+    }
+    btns.forEach(function(b){
+      b.addEventListener("click", function(ev){ ev.preventDefault(); ev.stopPropagation(); open(b); });
+      b.addEventListener("keydown", function(ev){ if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); ev.stopPropagation(); open(b); } });
+    });
+  })();
+
   window.VKA = {S:S, save:save, award:award, level:level, LEVELS:LEVELS, points:points, toast:toast, ctaHtml:ctaHtml, initCta:initCta, reveal:reveal, price:price, esc:esc, root:ROOT, page:PAGE, reduce:reduce, goal:goal};
 })();

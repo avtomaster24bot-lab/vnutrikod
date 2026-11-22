@@ -270,6 +270,15 @@ for i in journey_order():
     base = _old.get(i, dict(id=START, url="slushat/", title=TITLE[START], kind="Старт", topic="celi"))
     SCRIPTS.append(dict(id=i, url=base["url"], title=TITLE[i], kind=base["kind"], topic=base["topic"], text=tts_par(txt),
                         path=PLAN[i]["path"], path_title=PATH_TITLE.get(PLAN[i]["path"], "Вход"), next=PLAN[i]["next"], new=(i in TEXTS or i == START)))
+# короткие аудио разделов, подарков, тестов, рубрик и форматов (audio_sections.py)
+from audio_sections import SECTIONS as _SEC
+_SEC_ROUTES = {"razdely": "Разделы сайта и бесплатные подарки", "testy": "Тесты: послушать перед прохождением", "rubriki": "Рубрики энциклопедии", "formaty": "Форматы живой работы"}
+def _route(i): return "testy" if i.startswith("test-") else "rubriki" if i.startswith("kat-") else "formaty" if i.startswith("format-") else "razdely"
+for _i, (_u, _t, _kind, _top, _nx, _txt) in _SEC.items():
+    TITLE[_i] = _t
+    SCRIPTS.append(dict(id=_i, url=_u, title=_t, kind=_kind, topic=_top, text=tts_par(_txt), path=_route(_i), path_title=_SEC_ROUTES[_route(_i)], next=_nx, new=True, short=True))
+for _k, _n in _SEC_ROUTES.items():
+    PATHS[_k] = (_n, [i for i in _SEC if _route(i) == _k])
 BY_ID = {x["id"]: x for x in SCRIPTS}
 BY_URL = {x["url"]: x for x in SCRIPTS}
 EXTRA_PAGES = {"": START}   # главная тоже показывает вступительное аудио

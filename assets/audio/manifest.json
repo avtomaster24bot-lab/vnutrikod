@@ -484,5 +484,77 @@
   "duration": 141.8,
   "bytes": 851212,
   "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-podarki": {
+  "hash": "0d551aaa53af",
+  "duration": 58.4,
+  "bytes": 350708,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-ceny": {
+  "hash": "5c210690cd02",
+  "duration": 67.8,
+  "bytes": 407135,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-znaniya": {
+  "hash": "19b2c87f0e41",
+  "duration": 63.4,
+  "bytes": 380779,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-karta-dnya": {
+  "hash": "feb4307ed381",
+  "duration": 64.1,
+  "bytes": 384961,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-mini-lila": {
+  "hash": "c5548c5dd5ca",
+  "duration": 65.5,
+  "bytes": 393317,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-testy": {
+  "hash": "3e25f8377132",
+  "duration": 71.1,
+  "bytes": 427159,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-7-dnej": {
+  "hash": "5ce26cbf8b1f",
+  "duration": 60.9,
+  "bytes": 365959,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-chek-listy": {
+  "hash": "a811c14bab2e",
+  "duration": 58.6,
+  "bytes": 351843,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-dyhanie": {
+  "hash": "766baa44711b",
+  "duration": 66.1,
+  "bytes": 397341,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-marina": {
+  "hash": "a3df1c72ae8e",
+  "duration": 61.7,
+  "bytes": 370397,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-moj-put": {
+  "hash": "da0bba314f76",
+  "duration": 51.4,
+  "bytes": 308916,
+  "voice": "ru-RU-SvetlanaNeural"
+ },
+ "razdel-faq": {
+  "hash": "1d67adcf7eb3",
+  "duration": 64.5,
+  "bytes": 387401,
+  "voice": "ru-RU-SvetlanaNeural"
  }
 }

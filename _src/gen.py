@@ -17,7 +17,7 @@ OUT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://avtomaster24bot-lab.github.io/vnutrikod/"
 BASE = "/vnutrikod/"
 BRAND = "Внутрикод"
-V = "13"
+V = "14"
 KOLESO = "https://avtomaster24bot-lab.github.io/koleso-uspeha/"
 TG = "https://t.me/MarinaNew"
 PAGES = []
@@ -76,8 +76,8 @@ def cta(key, label="Записаться", cls="btn", title=None):
 def price(key): p = PROD[key]; return '<span data-price="%s" data-group="%s">%s</span>' % (p["code"], p["g"], pr(p["code"], p["g"]))
 def prodcard(key, root):
     p = PROD[key]
-    return ('<article class="pcard glass rv"><span class="kick">%s</span><h3><a href="%s%s">%s</a></h3><p class="muted">%s</p><div class="pfoot"><b class="pp">%s</b>%s</div></article>'
-            % (e(p["k"]), root, p["u"], e(p["t"]), e(p["s"]), price(key), cta(key, "Записаться", "btn sm")))
+    return ('<article class="pcard glass rv">%s%s<span class="kick">%s</span><h3><a href="%s%s">%s</a></h3><p class="muted">%s</p><div class="pfoot"><b class="pp">%s</b>%s</div></article>'
+            % (thumb(p["u"], root), cplay(p["u"], root), e(p["k"]), root, p["u"], e(p["t"]), e(p["s"]), price(key), cta(key, "Записаться", "btn sm")))
 
 # ---------------------------------------------------------------- макет
 NAV = [("navigator/", "Навигатор", "nav"), ("podpiska/", "Подписка", "sub"), ("znaniya/", "Знания", "zn"), ("podarki/", "Подарки", "gift"), ("ceny/", "Форматы и цены", "price"), ("marina/", "Марина", "mar")]
@@ -128,6 +128,48 @@ def audio_block(x, root, compact=False, link=False):
         ('' if compact else '<a class="aud-dl" href="%sslushat/">Все аудио</a>' % root), src, nx,
         ('' if compact else '<p class="small muted aud-n">%s. Слушайте подряд — каждое аудио подскажет следующее. Есть и <a href="%sslushat/podcast.xml">подкаст</a>.</p>' % (voice, root)))
 
+# ---------------------------------------------------------------- иллюстрации (assets/img/v2, см. _src/images_v2.py)
+IMGD = os.path.join(OUT, "assets/img/v2")
+IMGS = {f[:-5] for f in os.listdir(IMGD) if f.endswith(".webp") and not f.endswith("-480.webp")} if os.path.isdir(IMGD) else set()
+_IMGMETA = json.load(open(os.path.join(IMGD, "alt.json"), encoding="utf-8")) if os.path.exists(os.path.join(IMGD, "alt.json")) else {}
+def img_key(u):
+    """Ключ иллюстрации по адресу страницы/карточки."""
+    u = u.split("#")[0].split("?")[0]
+    parts = [x for x in u.strip("/").split("/") if x]
+    if not parts: return None
+    a = parts[0]
+    if a == "znaniya" and len(parts) > 1 and parts[1] in ARTICLES: return "cat-" + ARTICLES[parts[1]]["cat"]
+    if a in ("trening", "mini") and len(parts) > 1: return "%s-%s" % (a, parts[1])
+    if a == "modul" and len(parts) > 1: return "modul-" + parts[1].split("-")[0]
+    if a == "marafon" and len(parts) > 1: return "marafon-" + parts[1]
+    if a == "testy" and len(parts) > 1: return "test-" + parts[1]
+    if a in ("koleso-uspeha", "lila", "klub", "individualno", "diagnostika", "psihologam"): return a
+    return "sec-" + a
+def img_alt(k): return _IMGMETA.get(k, "Абстрактная иллюстрация в стиле Внутрикода")
+def thumb(u, root, cls="cthumb"):
+    k = img_key(u)
+    if k not in IMGS: return ""
+    return '<span class="%s"><img src="%sassets/img/v2/%s-480.webp" alt="%s" width="480" height="270" loading="lazy" decoding="async"></span>' % (cls, root, k, e(img_alt(k), quote=True))
+def hero_img(k, root):
+    return ('<figure class="himg rv"><img src="%sassets/img/v2/%s.webp" srcset="%sassets/img/v2/%s-480.webp 480w, %sassets/img/v2/%s.webp 1200w" sizes="(max-width:860px) 100vw, 460px" alt="%s" width="1200" height="675" loading="lazy" decoding="async"></figure>'
+            % (root, k, root, k, root, k, k and e(img_alt(k), quote=True)))
+def cplay(u, root):
+    """Маленькая кнопка ▶ на карточке: играет аудио этой страницы в нижнем мини-плеере."""
+    x = AUDIO_BY_URL.get(u)
+    if not x or x["id"] not in AMAN: return ""
+    d = json.dumps({"id": x["id"], "t": x["title"], "src": asrc(x["id"], root), "u": root + x["url"], "d": mmss(AMAN[x["id"]]["duration"])}, ensure_ascii=False)
+    return '<span class="cplay" role="button" tabindex="0" aria-label="Слушать: %s · %s" title="Слушать · %s" data-cplay=\'%s\'><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><i>%s</i></span>' % (
+        e(x["title"], quote=True), mmss(AMAN[x["id"]]["duration"]), mmss(AMAN[x["id"]]["duration"]), e(d, quote=True), mmss(AMAN[x["id"]]["duration"]))
+def saud(i, root, note=""):
+    """Короткий плеер раздела/блока (compact)."""
+    x = AUDIO_BY_ID.get(i)
+    if not x or i not in AMAN: return ""
+    return '<div class="saud rv">%s%s</div>' % (('<span class="saud-h">%s</span>' % note) if note else "", audio_block(x, root, compact=True, link=not x.get("short")))
+def audlist(ids, root, kick="Послушать", h="Коротко — голосом", lead="", cls="alt"):
+    xs = [AUDIO_BY_ID[i] for i in ids if i in AUDIO_BY_ID and i in AMAN]
+    if not xs: return ""
+    return sec(head(kick, h, lead) + '<div class="aud-list">%s</div>' % "".join(audio_block(x, root, compact=True, link=not x.get("short")) for x in xs), cls)
+
 def layout(path, title, desc, body, active="", mcta=None, jsonld=None, tools=False, og="og.png", ogtype="website", crumbs=None):
     depth = 0 if path in ("", "404.html") else path.rstrip("/").count("/") + 1
     root = BASE if path == "404.html" else "../" * depth
@@ -150,6 +192,12 @@ def layout(path, title, desc, body, active="", mcta=None, jsonld=None, tools=Fal
         if body.startswith("<article"): body = body.replace("</header>", "</header><div class=\"wrap narrow\">%s</div>" % blk, 1)
         else: body = body.replace("</section>", "</section><div class=\"wrap\">%s</div>" % blk, 1)
         lds.append({"@context": "https://schema.org", "@type": "AudioObject", "name": "Послушать: " + ax["title"], "contentUrl": SITE + "assets/audio/%s.mp3" % ax["id"], "encodingFormat": "audio/mpeg", "inLanguage": "ru", "duration": "PT%dS" % int(AMAN.get(ax["id"], {}).get("duration", 0))})
+    ik = img_key(path) if path not in ("", "404.html", "oferta/", "politika/", "konfidencialnost/") else None
+    if ik in IMGS:
+        m = re.search(r'<(section|header) class="hero', body)
+        if m:
+            tag = m.group(1); end = body.index("</%s>" % tag, m.start()); cut = body.rindex("</div>", m.start(), end)
+            body = body[:m.start()] + body[m.start():cut].replace('class="hero', 'class="hero hasimg', 1) + hero_img(ik, root) + body[cut:]
     ld = "".join('<script type="application/ld+json">%s</script>' % json.dumps(x, ensure_ascii=False) for x in lds)
     mob = '<div class="mbar">%s<a class="btn ghost sm" href="%snavigator/">Навигатор</a></div>' % (mcta or cta("diag", "Диагностика · 1 000 ₽", "btn sm"), root)
     tl = ('<script src="%sassets/tools.js?v=%s"></script>' % (root, V)) if tools else ""
@@ -187,11 +235,11 @@ def readmin(a):
     return max(2, round(words / 170))
 def acard(slug, root):
     a = ARTICLES[slug]; d = a["desc"]
-    return ('<a class="acard glass rv" href="%sznaniya/%s/" data-art="%s"><span class="kick">%s · %d мин</span><b>%s</b><span class="muted small">%s</span><i class="seen" aria-hidden="true">✓ прочитано</i></a>'
-            % (root, slug, slug, e(CAT[a["cat"]]), readmin(a), e(a["title"]), e(d if len(d) < 125 else d[:120].rsplit(" ", 1)[0] + "…")))
+    return ('<a class="acard glass rv" href="%sznaniya/%s/" data-art="%s">%s%s<span class="kick">%s · %d мин</span><b>%s</b><span class="muted small">%s</span><i class="seen" aria-hidden="true">✓ прочитано</i></a>'
+            % (root, slug, slug, thumb("znaniya/%s/" % slug, root), cplay("znaniya/%s/" % slug, root), e(CAT[a["cat"]]), readmin(a), e(a["title"]), e(d if len(d) < 125 else d[:120].rsplit(" ", 1)[0] + "…")))
 def tcard(slug, root):
     t = TESTD[slug]
-    return '<a class="tcard glass rv" href="%stesty/%s/" data-testlink="%s"><span class="emo">%s</span><b>%s</b><span class="muted small">%s</span><span class="chip">%d мин · бесплатно</span><i class="seen" aria-hidden="true">✓ пройден</i></a>' % (root, slug, slug, t["emoji"], e(t["title"]), e(t["desc"]), t["mins"])
+    return '<a class="tcard glass rv" href="%stesty/%s/" data-testlink="%s">%s%s<span class="emo">%s</span><b>%s</b><span class="muted small">%s</span><span class="chip">%d мин · бесплатно</span><i class="seen" aria-hidden="true">✓ пройден</i></a>' % (root, slug, slug, thumb("testy/%s/" % slug, root), cplay("testy/%s/" % slug, root), t["emoji"], e(t["title"]), e(t["desc"]), t["mins"])
 
 GIFTS = [("testy/", "🧭", "8 тестов-самонаблюдений", "Самозванец, денежный сценарий, гиперконтроль, колесо баланса — с персональным разбором."),
          ("karta-dnya/", "🃏", "Карта дня", "Генеративный образ и вопрос для самоисследования. Новая карта каждый день."),
@@ -201,7 +249,7 @@ GIFTS = [("testy/", "🧭", "8 тестов-самонаблюдений", "Са
          ("chek-listy/", "📄", "Чек-листы для печати", "PDF: «Тащу всё на себе», «Мои денежные установки», «Колесо баланса»."),
          ("znaniya/", "📚", "Энциклопедия", "%d статей простым языком — с практиками и источниками." % len(ARTICLES)),
          ("slushat/", "🎧", "Слушать: аудио-объяснения", "%d коротких аудио о программах и статьях — в дороге, на прогулке, в подкасте." % len(AUDIO))]
-def giftgrid(root, n=8): return '<div class="grid g4">%s</div>' % "".join('<a class="gcard glass rv" href="%s%s"><span class="emo">%s</span><b>%s</b><span class="muted small">%s</span></a>' % (root, u, i, e(t), e(d)) for u, i, t, d in GIFTS[:n])
+def giftgrid(root, n=8): return '<div class="grid g4">%s</div>' % "".join('<a class="gcard glass rv" href="%s%s">%s%s<span class="emo">%s</span><b>%s</b><span class="muted small">%s</span></a>' % (root, u, thumb(u, root), cplay(u, root), i, e(t), e(d)) for u, i, t, d in GIFTS[:n])
 
 TOPIC_ART = {"dengi": ["dengi-scenarii", "finansovyj-potolok", "kak-nazyvat-cenu"], "strahi": ["strah-uspeha", "sindrom-samozvanca", "bazovyj-strah"],
              "kontrol": ["giperkontrol", "giperotvetstvennost", "delegirovanie"], "konflikty": ["treugolnik-karpmana", "konflikty", "emocionalnyj-intellekt"],
@@ -216,7 +264,8 @@ def learn_block(topics, root, title="Перед записью — разбер�
             if s not in arts: arts.append(s)
         t = TOPIC_TEST.get(tp)
         if t and t not in tests: tests.append(t)
-    return sec(head("Бесплатно", title) + '<div class="grid g3">%s</div><div class="grid g3 mt">%s</div>' % ("".join(acard(s, root) for s in arts[:3]), "".join(tcard(t, root) for t in tests[:2])), "alt")
+    ka = next((saud("kat-" + tp, root) for tp in topics if ("kat-" + tp) in AMAN), "")
+    return sec(head("Бесплатно", title) + ka + '<div class="grid g3">%s</div><div class="grid g3 mt">%s</div>' % ("".join(acard(s, root) for s in arts[:3]), "".join(tcard(t, root) for t in tests[:2])), "alt")
 
 def buybox(key, rows, label="Записаться"):
     p = PROD[key]
@@ -238,7 +287,7 @@ LADDER = [("Бесплатно", "Тесты, карта дня, Мини-Лил
           ("Модуль", "1 месяц, 4 тренинга по одной сфере", "ceny/#modul", None, "modul:1"),
           ("«Колесо успеха»", "6 месяцев, 24 тренинга, полная трансформация", "koleso-uspeha/", None, "koleso")]
 def ladder(root):
-    return '<div class="ladder">%s</div>' % "".join('<a class="step glass rv" href="%s%s" style="--i:%d"><span class="n">%02d</span><b>%s</b><span class="muted small">%s</span><span class="pp">%s</span></a>' % (root, u, i, i + 1, e(t), e(d), fixed or price(key)) for i, (t, d, u, fixed, key) in enumerate(LADDER))
+    return '<div class="ladder">%s</div>' % "".join('<a class="step glass rv" href="%s%s" style="--i:%d">%s<span class="n">%02d</span><b>%s</b><span class="muted small">%s</span><span class="pp">%s</span></a>' % (root, u, i, cplay(u, root), i + 1, e(t), e(d), fixed or price(key)) for i, (t, d, u, fixed, key) in enumerate(LADDER))
 
 def marina_block(root):
     return f'''<div class="marina glass rv"><img src="{root}assets/img/marina.jpg" alt="Марина Степанова" width="400" height="485" loading="lazy"><div>
@@ -248,6 +297,19 @@ def marina_block(root):
 <div class="btns"><a class="btn ghost" href="{root}marina/">О Марине</a>{cta("vopros", "Задать вопрос", "btn ghost")}</div></div></div>'''
 
 NAVBOX = '<div class="navbox glass rv" data-navigator><div class="nv-head"><span class="nv-dot"></span><b>Проводник Внутрикода</b><span class="nv-mode" data-nv-mode>Навигатор · сценарий</span></div><div class="nv-log" data-nv-log aria-live="polite"></div><div class="nv-opts" data-nv-opts></div><form class="nv-form" data-nv-form><input type="text" data-nv-input placeholder="Или опишите своими словами…" aria-label="Ваш вопрос навигатору" maxlength="500"><button class="btn sm" type="submit">→</button></form><noscript><p>Для навигатора нужен JavaScript. <a href="znaniya/">Перейти в энциклопедию</a>.</p></noscript></div>'
+
+FMT = [("lila/", "Игра «Лила»", "4 часа, до 4 игроков: увидеть главную точку развития через игру."),
+       ("klub/", "Закрытый клуб", "Медитации по понедельникам и групповые «Разборы» — регулярная работа с собой."),
+       ("individualno/", "Сессия один на один", "Личный разбор архитектуры мышления: убеждения, реакции, сценарии."),
+       ("psihologam/", "Психологам и коучам", "Наставничество «Архитектор продукта» и личная проработка специалиста."),
+       ("koleso-uspeha/", "«Колесо успеха»", "6 месяцев, 6 сфер, 24 живых тренинга — полная программа."),
+       ("diagnostika/", "Диагностика 30 минут", "Самый мягкий живой шаг: Марина подскажет, с чего начать именно вам.")]
+def fmtcards(root):
+    out = ""
+    for u, t, d in FMT:
+        x = AUDIO_BY_URL.get(u)
+        out += '<div class="fcard glass rv">%s<h3><a href="%s%s">%s</a></h3><p class="muted small">%s</p>%s</div>' % (thumb(u, root), root, u, e(t), e(d), audio_block(x, root, compact=True) if x else "")
+    return '<div class="grid g3 fcards">%s</div>' % out
 
 # ================================================================ HOME
 def home():
@@ -261,12 +323,13 @@ def home():
 <div class="btns rv"><a class="btn" href="testy/koleso/">Бесплатный тест «Колесо баланса»</a><a class="btn ghost" href="#navigator">Запустить навигатор</a><a class="btn ghost" href="https://t.me/koleso_uspeha" target="_blank" rel="noopener">Telegram-канал</a></div>
 <div class="chips rv"><span class="chip">{len(ARTICLES)} статей</span><span class="chip">{len(TESTS)} тестов</span><span class="chip">Мини-Лила онлайн</span><span class="chip">Группы до 8 человек</span></div></div>
 <div class="orb rv" aria-hidden="true"><div class="core"></div><span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span></div></div></section>
-<section class="sec" id="navigator"><div class="wrap">{head("Интерактивный навигатор", "Ваш личный маршрут за 1 минуту", "Ответьте на 4 вопроса — навигатор соберёт путь: подарок, статья, тест и живой шаг с Мариной. Работает прямо в браузере, без регистрации.")}{NAVBOX}</div></section>
+<section class="sec" id="navigator"><div class="wrap">{head("Интерактивный навигатор", "Ваш личный маршрут за 1 минуту", "Ответьте на 4 вопроса — навигатор соберёт путь: подарок, статья, тест и живой шаг с Мариной. Работает прямо в браузере, без регистрации.")}{saud("razdel-navigator", root)}{NAVBOX}</div></section>
 {sec(head("Метод", "Распознать → углубить → развернуть в ресурс", "Так устроена каждая живая сессия Марины. Первый шаг вы можете сделать сами.") + '<div class="grid g3"><div class="glass card rv"><span class="num">1</span><h3>Распознать</h3><p class="muted">Тесты и статьи помогают увидеть, какой «код» срабатывает: самозванец, денежный сценарий, гиперконтроль, роль в треугольнике.</p></div><div class="glass card rv"><span class="num">2</span><h3>Углубить</h3><p class="muted">На диагностике и мини-тренинге вы видите, откуда растёт сценарий и что он охраняет.</p></div><div class="glass card rv"><span class="num">3</span><h3>Развернуть в ресурс</h3><p class="muted">На тренингах и сессиях Марина шаг за шагом перенастраивает реакцию — вы уходите с результатом и планом на 24 часа.</p></div></div>')}
-{sec(head("Бесплатные подарки", "Начните с того, что откликается", "Всё бесплатно и без регистрации. Прогресс сохраняется только в вашем браузере.") + giftgrid(root), "alt")}
-{sec(head("Энциклопедия", "Психология простым языком — с источниками", "Статьи связаны между собой: от самозванца к цене, от контроля к делегированию, от «Лилы» к МАК-картам.") + '<div class="grid g3">' + "".join(acard(s, root) for s in popular) + '</div><div class="btns center"><a class="btn ghost" href="znaniya/">Все статьи</a></div>')}
-{sec(head("Лестница форматов", "От бесплатного теста до полной трансформации", "Каждая ступень логично ведёт к следующей.") + ladder(root) + '<div class="btns center"><a class="btn" href="ceny/">Все форматы и цены</a></div>', "alt")}
-{sec(marina_block(root))}
+{sec(head("Бесплатные подарки", "Начните с того, что откликается", "Всё бесплатно и без регистрации. Прогресс сохраняется только в вашем браузере.") + saud("razdel-podarki", root) + giftgrid(root), "alt")}
+{sec(head("Энциклопедия", "Психология простым языком — с источниками", "Статьи связаны между собой: от самозванца к цене, от контроля к делегированию, от «Лилы» к МАК-картам.") + saud("razdel-znaniya", root) + '<div class="grid g3">' + "".join(acard(s, root) for s in popular) + '</div><div class="btns center"><a class="btn ghost" href="znaniya/">Все статьи</a></div>')}
+{sec(head("Лестница форматов", "От бесплатного теста до полной трансформации", "Каждая ступень логично ведёт к следующей.") + saud("razdel-ceny", root) + ladder(root) + '<div class="btns center"><a class="btn" href="ceny/">Все форматы и цены</a></div>', "alt")}
+{sec(head("Живая работа с Мариной", "Нажмите ▶ — и узнайте за пару минут, что даёт каждый формат", "Игра, клуб, личные сессии, программа для специалистов и полугодовое «Колесо успеха». Каждое аудио объясняет, что вы получите и кому это подходит.") + fmtcards(root))}
+{sec(marina_block(root) + saud("razdel-marina", root))}
 {sec(head("Отзывы", "Что говорят участники") + '<div class="grid g3">' + revs + '</div><div class="btns center"><a class="btn ghost" href="otzyvy/">Все отзывы</a></div>', "alt")}
 {sec('<div class="band glass rv"><h2>Не знаете, с чего начать?</h2><p>Начните с бесплатного теста или навигатора. Если нужен живой шаг — диагностика 30 минут: её стоимость засчитывается, если вы продолжите работу.</p><div class="btns center">' + cta("diag", "Записаться на диагностику · 1 000 ₽") + '<a class="btn ghost" href="podpiska/">Тарифы ИИ-навигатора</a></div></div>')}'''
     ld = [{"@context": "https://schema.org", "@type": "WebSite", "name": BRAND, "url": SITE, "inLanguage": "ru"},
@@ -286,6 +349,7 @@ def enc_index():
     body = hero("Энциклопедия", "Знания о внутреннем коде", "%d коротких статей о страхах, деньгах, контроле, отношениях, привычках и трансформационных играх. В каждой — чек-лист, мини-практика, связанные темы и источники." % len(ARTICLES),
                 extra='<div class="encbar rv"><input type="search" id="encq" placeholder="Поиск: самозванец, деньги, Лила…" aria-label="Поиск по статьям"><div class="fchips">%s</div><p class="small muted" id="encstat"></p></div>' % chips)
     body += sec('<div class="grid g3" id="enc">%s</div><p class="muted hidden" id="encempty">Ничего не нашлось. Попробуйте другое слово или <a href="../navigator/">спросите навигатор</a>.</p>' % cards)
+    body += audlist(["kat-" + k for k, _ in CATS], root, "Рубрики", "Обзор каждой рубрики — за минуту", "Не знаете, какую статью открыть? Послушайте короткий обзор рубрики: что в ней есть и с чего начать. У каждой карточки выше тоже есть кнопка ▶.")
     ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Энциклопедия Внутрикода", "url": SITE + "znaniya/", "hasPart": [{"@type": "Article", "headline": a["title"], "url": SITE + "znaniya/%s/" % s} for s, a in ARTICLES.items()]}
     layout("znaniya/", "Энциклопедия психологии: страхи, деньги, контроль, Лила", "Короткие статьи о синдроме самозванца, страхе успеха, денежных сценариях, гиперконтроле, треугольнике Карпмана, перфекционизме, игре «Лила» и МАК-картах — с практиками и источниками.", body, "zn", jsonld=ld, tools=True, crumbs=[("znaniya/", "Энциклопедия")])
 
@@ -303,7 +367,7 @@ def article(slug):
 <h1 class="rv">{e(a["title"])}</h1><p class="lead rv">{e(a["lead"])}</p></div></header>
 <div class="wrap narrow prose">{paras}
 <section class="glass box rv"><span class="kick">Как это проявляется</span><h2>Отметьте, что узнаёте в себе</h2><ul class="checks">{signs}</ul><p class="small" data-signres>Отмечено: 0 из {len(a["signs"])}.</p>
-<a class="btn sm" href="{root}testy/{t["slug"]}/">Тест «{e(t["title"])}» · {t["mins"]} мин</a></section>
+<a class="btn sm" href="{root}testy/{t["slug"]}/">Тест «{e(t["title"])}» · {t["mins"]} мин</a>{saud("test-" + t["slug"], root)}</section>
 <section class="glass box rv practice"><span class="kick">Мини-практика · 5–10 минут</span><h2>{e(a["practice"][0])}</h2><ol class="steps">{steps}</ol>
 <button class="btn ghost sm" type="button" data-done="{slug}">Я сделала практику ✓</button></section>
 <section class="glass box rv offer"><span class="kick">Следующий шаг — вживую с Мариной</span><h2><a href="{root}{p["u"]}">{e(p["t"])}</a></h2><p>{e(p["s"] or "Живая онлайн-работа — пошагово от распознавания к развороту в ресурс.")}</p>
@@ -322,6 +386,7 @@ def tests_index():
     root = "../"
     body = hero("Бесплатные тесты", "Тесты-самонаблюдения", "8 авторских опросников с персональным разбором. Это не клиническая диагностика, а способ честно посмотреть на себя и выбрать следующий шаг. Ответы остаются только в вашем браузере.")
     body += sec('<div class="grid g4">%s</div>' % "".join(tcard(t["slug"], root) for t in TESTS))
+    body += audlist(["test-" + t["slug"] for t in TESTS], root, "Перед тестом", "Послушайте, что покажет каждый тест", "Минута о том, зачем проходить тест, что будет в разборе и куда двигаться дальше.")
     layout("testy/", "Бесплатные психологические тесты", "Индекс самозванца, денежный сценарий, кто жмёт на тормоза, гиперконтроль, колесо баланса, индикатор ресурса, треугольник Карпмана, перфекционизм — бесплатно, с разбором.", body, "gift", tools=True, crumbs=[("podarki/", "Подарки"), ("testy/", "Тесты")])
 
 def test_page(t):
@@ -339,6 +404,7 @@ def test_page(t):
 def gifts():
     root = "../"
     body = hero("Бесплатно", "Подарки Внутрикода", "Инструменты, к которым хочется возвращаться: тесты, карта дня, Мини-Лила, дыхание, челлендж и чек-листы. Без регистрации.") + sec(giftgrid(root))
+    body += audlist(["razdel-testy", "razdel-karta-dnya", "razdel-mini-lila", "razdel-dyhanie", "razdel-7-dnej", "razdel-chek-listy", "razdel-znaniya", "razdel-moj-put"], root, "Подарки голосом", "Что даёт каждый подарок — коротко", "Нажмите ▶ на любой карточке выше или послушайте здесь по порядку.")
     body += sec('<div class="band glass rv"><h2>Хотите живой разбор?</h2><p>Подарки помогают распознать «код». Перенастроить его быстрее вместе с Мариной — на диагностике или мини-тренинге.</p><div class="btns center">%s<a class="btn ghost" href="../ceny/">Все форматы</a></div></div>' % cta("diag", "Диагностика · 1 000 ₽"), "alt")
     layout("podarki/", "Бесплатные подарки: тесты, карта дня, Мини-Лила", "Бесплатные инструменты самопознания: 8 тестов, генеративная карта дня, онлайн Мини-Лила, дыхательный таймер, 7-дневный челлендж и чек-листы в PDF.", body, "gift", crumbs=[("podarki/", "Подарки")])
 
@@ -406,13 +472,13 @@ def prices_page():
     body += sec(ladder(root))
     body += sec(head("Почему такая цена", "Глубина индивидуальной сессии — в малой группе") + '<div class="grid g3"><div class="glass card rv"><h3>До 8 человек</h3><p class="muted">Оптимально 5. Каждый работает со своим запросом, а не слушает лекцию.</p></div><div class="glass card rv"><h3>Пошагово</h3><p class="muted">Распознавание → углубление → разворот в ресурс. В конце — конкретные шаги на 24 часа.</p></div><div class="glass card rv"><h3>Дешевле, чем лично</h3><p class="muted">Индивидуальная сессия у Марины — %s. Тренинг даёт сопоставимую глубину за %s.</p></div></div>' % (price("individ"), price("trening:strah-uspeha")), "alt")
     body += sec(head("Подписка", "ИИ-навигатор «Колесо успеха»", "Тест и ограниченный диалог — бесплатно. Онлайн-оплата пока не подключена: Марина пришлёт реквизиты в Telegram. Это не медицинская услуга.") + '<div class="grid g3">' + prodcard("navigator-trial", root) + prodcard("navigator-month", root) + prodcard("navigator-year", root) + "</div>")
-    body += sec(head("Вход", "Диагностика, клуб и игра") + '<div class="grid g3">' + prodcard("diag", root) + prodcard("klub", root) + prodcard("lila", root) + "</div>")
-    body += sec('<div id="mini"></div>' + head("1–1,5 часа · групповая диагностика", "Мини-тренинги", "Смотреть могут многие, активно играют 5–6 участников — каждый уходит с лёгким разворотом.") + '<div class="grid g3">' + minis + "</div>", "alt")
-    body += sec('<div id="trening"></div>' + head("2–3 часа · группа до 8", "Трансформационные тренинги") + '<div class="grid g3">' + trs + prodcard("trening:samotsennost", root) + "</div>")
-    body += sec('<div id="modul"></div>' + head("1 месяц · 4 тренинга", "Модули «Колеса успеха»", "Модуль выгоднее, чем 4 тренинга по отдельности.") + '<div class="grid g3">' + mods + "</div>", "alt")
-    body += sec(head("Флагман", "«Колесо успеха»: 6 месяцев") + '<div class="grid g3">' + prodcard("koleso-part1", root) + prodcard("koleso", root) + prodcard("koleso-part2", root) + '</div><p class="note rv" data-upgrade></p>')
-    body += sec(head("Лично", "Индивидуальная работа") + '<div class="grid g4">' + "".join(prodcard(k, root) for k in ("individ", "individ3", "individ5", "individ-povtor")) + "</div>", "alt")
-    body += sec(head("Марафоны и программы", "Ещё форматы") + '<div class="grid g3">' + prodcard("marafon:dvizhenie", root) + prodcard("marafon:samoprinyatie", root) + prodcard("psy", root) + "</div>")
+    body += sec(head("Вход", "Диагностика, клуб и игра") + saud("diagnostika", root) + '<div class="grid g3">' + prodcard("diag", root) + prodcard("klub", root) + prodcard("lila", root) + "</div>")
+    body += sec('<div id="mini"></div>' + head("1–1,5 часа · групповая диагностика", "Мини-тренинги", "Смотреть могут многие, активно играют 5–6 участников — каждый уходит с лёгким разворотом.") + saud("format-mini", root) + '<div class="grid g3">' + minis + "</div>", "alt")
+    body += sec('<div id="trening"></div>' + head("2–3 часа · группа до 8", "Трансформационные тренинги") + saud("format-trening", root) + '<div class="grid g3">' + trs + prodcard("trening:samotsennost", root) + "</div>")
+    body += sec('<div id="modul"></div>' + head("1 месяц · 4 тренинга", "Модули «Колеса успеха»", "Модуль выгоднее, чем 4 тренинга по отдельности.") + saud("format-modul", root) + '<div class="grid g3">' + mods + "</div>", "alt")
+    body += sec(head("Флагман", "«Колесо успеха»: 6 месяцев") + saud("koleso-uspeha", root) + '<div class="grid g3">' + prodcard("koleso-part1", root) + prodcard("koleso", root) + prodcard("koleso-part2", root) + '</div><p class="note rv" data-upgrade></p>')
+    body += sec(head("Лично", "Индивидуальная работа") + saud("individualno", root) + '<div class="grid g4">' + "".join(prodcard(k, root) for k in ("individ", "individ3", "individ5", "individ-povtor")) + "</div>", "alt")
+    body += sec(head("Марафоны и программы", "Ещё форматы") + '<div class="aud-list mb">' + saud("marafon-dvizhenie-k-celi", root) + saud("marafon-samoprinyatie", root) + saud("psihologam", root) + '</div>' + '<div class="grid g3">' + prodcard("marafon:dvizhenie", root) + prodcard("marafon:samoprinyatie", root) + prodcard("psy", root) + "</div>")
     ld = {"@context": "https://schema.org", "@type": "OfferCatalog", "name": "Форматы работы с Мариной Степановой", "itemListElement": [{"@type": "Offer", "name": PROD[k]["t"], "price": re.sub(r"\D", "", pr(PROD[k]["code"], PROD[k]["g"])), "priceCurrency": "RUB", "url": SITE + PROD[k]["u"]} for k in ("diag", "mini:samozvanets", "trening:strah-uspeha", "modul:1", "koleso", "individ", "lila")]}
     layout("ceny/", "Форматы и цены: от бесплатного теста до «Колеса успеха»", "Все форматы работы с психологом Мариной Степановой: диагностика 1 000 ₽, мини-тренинги 1 500 ₽, тренинги 5 000 ₽, модули 16 000 ₽, «Колесо успеха» 75 000 ₽, индивидуальные сессии, клуб, «Лила».", body, "price", jsonld=ld, crumbs=[("ceny/", "Форматы и цены")])
 
@@ -458,7 +524,7 @@ def module_page(m):
 
 def flagship():
     root = "../"
-    road = "".join('<a class="step glass rv" href="%smodul/%s/" style="--i:%d"><span class="n">М%d</span><b>%s</b><span class="muted small">Цель: %s</span><span class="pp">%s</span></a>' % (root, m["slug"], i, m["n"], e(m["title"]), e(m["goal"]), price("modul:%d" % m["n"])) for i, m in enumerate(MODULES))
+    road = "".join('<a class="step glass rv" href="%smodul/%s/" style="--i:%d">%s<span class="n">М%d</span><b>%s</b><span class="muted small">Цель: %s</span><span class="pp">%s</span></a>' % (root, m["slug"], i, cplay("modul/%s/" % m["slug"], root), m["n"], e(m["title"]), e(m["goal"]), price("modul:%d" % m["n"])) for i, m in enumerate(MODULES))
     body = hero("Флагман · 6 модулей · 24 живых тренинга", "«Колесо успеха»", "6 месяцев, 6 сфер: деньги, страхи, внутренние ограничения, проявленность, ритм и цели. Каждая — месяц из 4 трансформационных тренингов в группе до 8 человек.", cta("koleso", "Купить программу · " + pr("koleso-full")) + '<a class="btn ghost" href="#tiers">Сравнить варианты</a><a class="btn ghost" href="%stesty/koleso/">Тест «Колесо баланса»</a>' % root)
     body += sec(head("Путь", "6 модулей = 6 спиц колеса") + '<div class="ladder six">%s</div>' % road)
     body += sec('<div id="tiers"></div>' + head("Варианты участия", "Целиком или частями") + '<div class="grid g3">' + prodcard("koleso-part1", root) + prodcard("koleso", root) + prodcard("koleso-part2", root) + '</div><p class="note rv" data-upgrade></p><p class="small muted" data-save="full" data-code="koleso-full"></p>', "alt")
@@ -485,6 +551,7 @@ def klub_page():
         ticks(["Нажмите «Записаться в клуб» — откроется сообщение Марине.", "Сейчас идёт предзапись: онлайн-оплата подписки ещё не подключена, Марина пришлёт детали лично.", "Подписка ежемесячная."]))
     body += sec('<div class="lay"><div>%s</div>%s</div>' % (left, buybox("klub", [("Формат", "закрытый Telegram-канал и чат"), ("Подписка", "ежемесячная")], "Записаться в клуб")))
     body += sec(head("Попробовать бесплатно", "Подарки в духе клуба") + giftgrid(root, 4), "alt")
+    body += audlist(["razdel-dyhanie", "test-resurs", "znaniya-meditaciya-i-vnimanie"], root, "Послушать по теме", "Ресурс, внимание и регулярность", "", "")
     layout("klub/", "Закрытый клуб Марины Степановой — подписка", "Закрытый клуб по подписке: медитации по понедельникам, групповые «Разборы», карта недели и ранняя запись на тренинги. 1 990 ₽ в месяц, предзапись.", body, "price", mcta=cta("klub", "В клуб · " + pr("club"), "btn sm"), crumbs=[("klub/", "Закрытый клуб")])
 
 def individual():
@@ -505,7 +572,7 @@ def diagnostics():
     body = hero("Лично · 1 на 1 · 30 минут · онлайн", "Личная диагностика", "За каждой повторяющейся ситуацией стоит система: убеждения, эмоциональные всплески, избегание и защиты. За 30 минут один на один вы увидите, что стоит за вашей историей, и поймёте, какой шаг нужен дальше.", cta("diag", "Записаться · " + pr("diagnostika")))
     left = '<div class="glass box rv"><h2>Это для вас, если</h2>%s</div><div class="glass box rv"><h2>Что вы получите</h2>%s</div>' % (ticks(["Ситуация повторяется, а вы не понимаете, что её запускает.", "Хочется изменений, но непонятно, с чего начать.", "Вы выбираете между сессией, тренингом и модулем."], "q"), ticks(["Ясность: что на самом деле стоит за вашей ситуацией.", "Рекомендацию формата: сессия, тренинг, модуль или клуб.", "Зачёт стоимости диагностики при покупке следующего шага."]))
     body += sec('<div class="lay"><div>%s<p class="small muted">Групповые «Разборы» проходят только в <a href="%sklub/">закрытом клубе</a>.</p></div>%s</div>' % (left, root, buybox("diag", [("Формат", "лично, 1 на 1, онлайн"), ("Длительность", "30 минут")], "Записаться на диагностику")))
-    body += sec(head("Перед диагностикой", "Пройдите тест — принесите результат") + '<div class="grid g4">' + "".join(tcard(s, root) for s in ("tormoza", "samozvanec", "dengi", "koleso")) + "</div>", "alt")
+    body += sec(head("Перед диагностикой", "Пройдите тест — принесите результат") + saud("razdel-testy", root) + '<div class="grid g4">' + "".join(tcard(s, root) for s in ("tormoza", "samozvanec", "dengi", "koleso")) + "</div>", "alt")
     layout("diagnostika/", "Личная диагностика 30 минут", "Полная индивидуальная диагностика по запросу: лично, 1 на 1, 30 минут онлайн, 1 000 ₽. Стоимость засчитывается при покупке тренинга, модуля или сессий.", body, "price", mcta=cta("diag", "Диагностика · " + pr("diagnostika"), "btn sm"), crumbs=[("diagnostika/", "Диагностика")])
 
 def marathons():
@@ -525,8 +592,8 @@ def psy():
     body = hero("Для психологов, коучей и экспертов", "Психологам и коучам", "Наставничество по созданию собственной трансформационной игры или программы и личная проработка профессиональных «тормозов».", cta("psy", "Обсудить проект"))
     body += sec('<div class="lay"><div><div class="glass box rv"><h2>«Архитектор продукта»</h2><p>Индивидуальное сопровождение 1–2 месяца для специалистов, которые хотят создать свой глубокий продукт.</p>%s</div><div class="glass box rv"><h2>Лист ожидания: обучение ведению Т-игр и групп с МАК</h2><p>Формат в разработке. Это не курс повышения квалификации и не программа с выдачей диплома.</p>%s</div></div>%s</div>'
                 % (ticks(["Диагностика вашего продукта или идеи.", "Структура: от запроса — до механики.", "Присутствие на тестовом проведении с обратной связью.", "Рекомендации по упаковке и воронке."]), cta("psy-wait", "Встать в лист ожидания", "btn ghost"), buybox("psy", [("Формат", "индивидуально, онлайн"), ("Срок", "1–2 месяца")], "Обсудить проект")))
-    body += sec(head("Личная проработка", "Тренинги, которые особенно откликаются специалистам") + '<div class="grid g3">' + "".join(prodcard("trening:" + s, root) for s in ("samozvanets-strah-razoblacheniya", "stoimost-uslugi", "kak-ozvuchivat-cenu", "samotsennost", "proyavlyajsya-legko", "moj-produkt-krutoj")) + "</div>", "alt")
-    body += sec(head("Знания для практики", "Статьи, полезные специалистам") + '<div class="grid g3">' + acard("mak-karty", root) + acard("transformacionnye-igry", root) + acard("kak-nazyvat-cenu", root) + "</div>")
+    body += sec(head("Личная проработка", "Тренинги, которые особенно откликаются специалистам") + saud("format-trening", root) + '<div class="grid g3">' + "".join(prodcard("trening:" + s, root) for s in ("samozvanets-strah-razoblacheniya", "stoimost-uslugi", "kak-ozvuchivat-cenu", "samotsennost", "proyavlyajsya-legko", "moj-produkt-krutoj")) + "</div>", "alt")
+    body += sec(head("Знания для практики", "Статьи, полезные специалистам") + saud("kat-igry", root) + '<div class="grid g3">' + acard("mak-karty", root) + acard("transformacionnye-igry", root) + acard("kak-nazyvat-cenu", root) + "</div>")
     layout("psihologam/", "Психологам и коучам: наставничество «Архитектор продукта»", "Наставничество для психологов и коучей по созданию своей трансформационной игры или программы. Личная проработка: самозванец, цена услуги, проявленность.", body, "price", mcta=cta("psy", "Обсудить проект", "btn sm"), crumbs=[("psihologam/", "Психологам")])
 
 def marina_page():
@@ -598,7 +665,7 @@ def slushat_page():
     root = "../"
     have = [x for x in AUDIO if x["id"] in AMAN]
     total = sum(AMAN[x["id"]]["duration"] for x in have)
-    order = ["samozvanec", "dengi", "strahi", "otnosheniya", "prednaznachenie", "lila", "psy"]
+    order = ["samozvanec", "dengi", "strahi", "otnosheniya", "prednaznachenie", "lila", "psy", "razdely", "testy", "formaty", "rubriki"]
     chips = "".join('<a class="chip" href="#p-%s">%s</a> ' % (k, e(APATHS[k][0])) for k in order)
     body = hero("Аудио · %d выпусков · %d мин" % (len(have), round(total / 60)), "🎧 Слушать Внутрикод",
                 "Аудио-маршруты: начните с вступления, выберите свою тему — и идите шаг за шагом: от бесплатной статьи к тесту, живой встрече и программе. Каждое аудио подскажет, что слушать дальше.",
