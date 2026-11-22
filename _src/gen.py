@@ -189,7 +189,8 @@ def layout(path, title, desc, body, active="", mcta=None, jsonld=None, tools=Fal
     ax = AUDIO_BY_URL.get(path) or (AUDIO_BY_ID[AUDIO_EXTRA[path]] if path in AUDIO_EXTRA else None)
     if ax:
         blk = audio_block(ax, root)
-        if body.startswith("<article"): body = body.replace("</header>", "</header><div class=\"wrap narrow\">%s</div>" % blk, 1)
+        if path == "" and '</p>\n<div class="btns rv">' in body: body = body.replace('</p>\n<div class="btns rv">', '</p>' + blk + '\n<div class="btns rv">', 1)
+        elif body.startswith("<article"): body = body.replace("</header>", "</header><div class=\"wrap narrow\">%s</div>" % blk, 1)
         else: body = body.replace("</section>", "</section><div class=\"wrap\">%s</div>" % blk, 1)
         lds.append({"@context": "https://schema.org", "@type": "AudioObject", "name": "Послушать: " + ax["title"], "contentUrl": SITE + "assets/audio/%s.mp3" % ax["id"], "encodingFormat": "audio/mpeg", "inLanguage": "ru", "duration": "PT%dS" % int(AMAN.get(ax["id"], {}).get("duration", 0))})
     ik = img_key(path) if path not in ("", "404.html", "oferta/", "politika/", "konfidencialnost/") else None
@@ -197,7 +198,13 @@ def layout(path, title, desc, body, active="", mcta=None, jsonld=None, tools=Fal
         m = re.search(r'<(section|header) class="hero', body)
         if m:
             tag = m.group(1); end = body.index("</%s>" % tag, m.start()); cut = body.rindex("</div>", m.start(), end)
-            body = body[:m.start()] + body[m.start():cut].replace('class="hero', 'class="hero hasimg', 1) + hero_img(ik, root) + body[cut:]
+            if 'class="wrap narrow' in body[m.start():m.start() + 300]:
+                # узкая колонка (статьи, тесты, подарки): плеер сразу под заголовком, обложка — под плеером
+                pos = end + len("</%s>" % tag)
+                if body.startswith('<div class="wrap', pos) and 'data-audio=' in body[pos:pos + 200]: pos = body.index("</section></div>", pos) + len("</section></div>")
+                body = body[:pos] + '<div class="wrap narrow himg-w">%s</div>' % hero_img(ik, root) + body[pos:]
+            else:
+                body = body[:m.start()] + body[m.start():cut].replace('class="hero', 'class="hero hasimg', 1) + hero_img(ik, root) + body[cut:]
     ld = "".join('<script type="application/ld+json">%s</script>' % json.dumps(x, ensure_ascii=False) for x in lds)
     mob = '<div class="mbar">%s<a class="btn ghost sm" href="%snavigator/">Навигатор</a></div>' % (mcta or cta("diag", "Диагностика · 1 000 ₽", "btn sm"), root)
     tl = ('<script src="%sassets/tools.js?v=%s"></script>' % (root, V)) if tools else ""
@@ -347,8 +354,8 @@ def enc_index():
     chips = '<button class="fchip on" type="button" data-cat="all">Все</button>' + "".join('<button class="fchip" type="button" data-cat="%s">%s</button>' % (k, e(v)) for k, v in CATS)
     cards = "".join('<div class="encit" data-c="%s" data-q="%s">%s</div>' % (a["cat"], e((a["title"] + " " + a["desc"]).lower()), acard(s, root)) for s, a in ARTICLES.items())
     body = hero("Энциклопедия", "Знания о внутреннем коде", "%d коротких статей о страхах, деньгах, контроле, отношениях, привычках и трансформационных играх. В каждой — чек-лист, мини-практика, связанные темы и источники." % len(ARTICLES),
-                extra='<div class="encbar rv"><input type="search" id="encq" placeholder="Поиск: самозванец, деньги, Лила…" aria-label="Поиск по статьям"><div class="fchips">%s</div><p class="small muted" id="encstat"></p></div>' % chips)
-    body += sec('<div class="grid g3" id="enc">%s</div><p class="muted hidden" id="encempty">Ничего не нашлось. Попробуйте другое слово или <a href="../navigator/">спросите навигатор</a>.</p>' % cards)
+                )
+    body += sec('<div class="encbar rv"><input type="search" id="encq" placeholder="Поиск: самозванец, деньги, Лила…" aria-label="Поиск по статьям"><div class="fchips">%s</div><p class="small muted" id="encstat"></p></div>' % chips + '<div class="grid g3" id="enc">%s</div><p class="muted hidden" id="encempty">Ничего не нашлось. Попробуйте другое слово или <a href="../navigator/">спросите навигатор</a>.</p>' % cards)
     body += audlist(["kat-" + k for k, _ in CATS], root, "Рубрики", "Обзор каждой рубрики — за минуту", "Не знаете, какую статью открыть? Послушайте короткий обзор рубрики: что в ней есть и с чего начать. У каждой карточки выше тоже есть кнопка ▶.")
     ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Энциклопедия Внутрикода", "url": SITE + "znaniya/", "hasPart": [{"@type": "Article", "headline": a["title"], "url": SITE + "znaniya/%s/" % s} for s, a in ARTICLES.items()]}
     layout("znaniya/", "Энциклопедия психологии: страхи, деньги, контроль, Лила", "Короткие статьи о синдроме самозванца, страхе успеха, денежных сценариях, гиперконтроле, треугольнике Карпмана, перфекционизме, игре «Лила» и МАК-картах — с практиками и источниками.", body, "zn", jsonld=ld, tools=True, crumbs=[("znaniya/", "Энциклопедия")])
