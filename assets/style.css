@@ -189,3 +189,22 @@ mark.ph{background:#fff4c2;color:#3a2f10;padding:0 .25em;border-radius:3px;font-
   .btns .btn,.btns .btn.ghost{width:100%;text-align:center;box-sizing:border-box}
   .hero h1,.hero.home h1{font-size:2rem}
 }
+/* ===== Аудио-объяснения ===== */
+.aud{display:flex;gap:18px;align-items:center;padding:18px 22px;margin:22px 0;position:relative;overflow:hidden}
+.aud::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 120px at 0% 0%,rgba(124,247,255,.12),transparent 60%);pointer-events:none}
+.aud-play{flex:0 0 auto;width:62px;height:62px;border-radius:50%;border:0;cursor:pointer;background:var(--grad);display:grid;place-items:center;box-shadow:0 8px 30px rgba(155,123,255,.45);transition:transform .2s}
+.aud-play:hover{transform:scale(1.06)}.aud-play svg{width:28px;height:28px;fill:#120c2e}
+.aud .i-pause{display:none}.aud.playing .i-pause{display:block}.aud.playing .i-play{display:none}
+.aud.playing .aud-play{animation:audpulse 1.6s ease-in-out infinite}
+@keyframes audpulse{0%,100%{box-shadow:0 0 0 0 rgba(124,247,255,.45)}50%{box-shadow:0 0 0 12px rgba(124,247,255,0)}}
+.aud-b{flex:1;min-width:0}.aud .kick{margin-bottom:4px}.aud-t{display:block;font:700 16px/1.35 var(--sans);margin-bottom:10px}.aud-t a{color:var(--ink);text-decoration:none}.aud-t a:hover{color:var(--c1)}
+.aud-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.12);cursor:pointer;position:relative}
+.aud-bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:99px;background:var(--grad)}
+.aud-meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:13px;color:var(--mut)}
+.aud-rate{background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--ink);border-radius:99px;padding:3px 10px;font:700 12px var(--sans);cursor:pointer}
+.aud-dl{color:var(--c1);text-decoration:none}.aud-dl:hover{text-decoration:underline}
+.aud audio{display:none}.no-js .aud audio{display:block;width:100%;margin-top:8px}.no-js .aud-play,.no-js .aud-bar,.no-js .aud-meta{display:none}
+.aud-n{margin:8px 0 0}
+.aud.compact{margin:0;padding:14px 16px;gap:14px}.aud.compact .aud-play{width:46px;height:46px}.aud.compact .aud-play svg{width:20px;height:20px}
+.aud-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+@media(max-width:560px){.aud{padding:14px;gap:12px}.aud-play{width:52px;height:52px}.aud-list{grid-template-columns:1fr}}

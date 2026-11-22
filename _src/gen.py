@@ -11,12 +11,13 @@ import articles1, articles2, articles3, articles4  # noqa: регистриру�
 from tests_data import TESTS, SCALE
 from extra import LILA_CELLS, LILA_JUMPS, CARD_PROMPTS, CARD_WORDS, CHALLENGE, NAV_THEMES
 from legal import oferta_body, politika_body, disclaimer, crisis
+from audio_scripts import SCRIPTS as AUDIO, BY_URL as AUDIO_BY_URL
 
 OUT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://avtomaster24bot-lab.github.io/vnutrikod/"
 BASE = "/vnutrikod/"
 BRAND = "Внутрикод"
-V = "10"
+V = "11"
 KOLESO = "https://avtomaster24bot-lab.github.io/koleso-uspeha/"
 TG = "https://t.me/MarinaNew"
 PAGES = []
@@ -100,6 +101,25 @@ GIFT = '''<div class="giftpop glass" id="giftpop" role="dialog" aria-labelledby=
 <span class="kick">Подарок перед уходом</span><b id="gp-t">Узнайте за 2 минуты, кто жмёт на ваши тормоза</b><p class="small muted">Бесплатный тест: 8 ситуаций → персональный разбор и следующий шаг.</p>
 <a class="btn sm" data-gp-go href="#">Пройти тест</a></div>'''
 
+# ---------------------------------------------------------------- аудио-объяснения
+_amf = os.path.join(OUT, "assets/audio/manifest.json")
+AMAN = json.load(open(_amf)) if os.path.exists(_amf) else {}
+def mmss(sec): sec = int(round(sec)); return "%d:%02d" % (sec // 60, sec % 60)
+def audio_block(x, root, compact=False, link=False):
+    m = AMAN.get(x["id"])
+    if not m: return ""
+    src = "%sassets/audio/%s.mp3?v=%s" % (root, x["id"], m["hash"][:6])
+    voice = "Голос Марины" if m.get("voice") == "own" else "Озвучено синтезированным голосом диктора — это не голос Марины"
+    ttl = ('<a href="%s%s">%s</a>' % (root, x["url"], e(x["title"]))) if link else e(x["title"])
+    return ('<section class="aud glass rv%s" data-audio="%s"><button class="aud-play" type="button" aria-label="Слушать: %s"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5v14l11-7z"/><path class="i-pause" d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></button>'
+            '<div class="aud-b"><span class="kick">🎧 %s · %s</span><b class="aud-t">%s</b>'
+            '<div class="aud-bar" role="slider" tabindex="0" aria-label="Перемотка" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>'
+            '<div class="aud-meta"><span data-cur>0:00</span><span>/ %s</span><button class="aud-rate" type="button" data-rate title="Скорость">1×</button><a class="aud-dl" href="%s" download>Скачать</a>%s</div>'
+            '<audio preload="none" controls src="%s"></audio>%s</div></section>') % (
+        " compact" if compact else "", x["id"], e(x["title"]), "Послушать объяснение" if not compact else e(x["kind"]), mmss(m["duration"]), ttl, mmss(m["duration"]), src,
+        ('' if compact else '<a class="aud-dl" href="%sslushat/">Все аудио</a>' % root), src,
+        ('' if compact else '<p class="small muted aud-n">%s. Удобно слушать в дороге — или подпишитесь на <a href="%sslushat/podcast.xml">подкаст</a>.</p>' % (voice, root)))
+
 def layout(path, title, desc, body, active="", mcta=None, jsonld=None, tools=False, og="og.png", ogtype="website", crumbs=None):
     depth = 0 if path in ("", "404.html") else path.rstrip("/").count("/") + 1
     root = BASE if path == "404.html" else "../" * depth
@@ -116,6 +136,11 @@ def layout(path, title, desc, body, active="", mcta=None, jsonld=None, tools=Fal
         lds.append({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items})
         bc = '<nav class="crumbs" aria-label="Хлебные крошки"><a href="%s">%s</a>%s</nav>' % (home_href, BRAND, "".join(
             ' <span>/</span> ' + ('<a href="%s%s">%s</a>' % (root, u, e(n)) if i < len(crumbs) - 1 else '<span aria-current="page">%s</span>' % e(n)) for i, (u, n) in enumerate(crumbs)))
+    if path in AUDIO_BY_URL:
+        blk = audio_block(AUDIO_BY_URL[path], root)
+        if body.startswith("<article"): body = body.replace("</header>", "</header><div class=\"wrap narrow\">%s</div>" % blk, 1)
+        else: body = body.replace("</section>", "</section><div class=\"wrap\">%s</div>" % blk, 1)
+        lds.append({"@context": "https://schema.org", "@type": "AudioObject", "name": "Послушать объяснение: " + AUDIO_BY_URL[path]["title"], "contentUrl": SITE + "assets/audio/%s.mp3" % AUDIO_BY_URL[path]["id"], "encodingFormat": "audio/mpeg", "inLanguage": "ru", "duration": "PT%dS" % int(AMAN.get(AUDIO_BY_URL[path]["id"], {}).get("duration", 0))})
     ld = "".join('<script type="application/ld+json">%s</script>' % json.dumps(x, ensure_ascii=False) for x in lds)
     mob = '<div class="mbar">%s<a class="btn ghost sm" href="%snavigator/">Навигатор</a></div>' % (mcta or cta("diag", "Диагностика · 1 000 ₽", "btn sm"), root)
     tl = ('<script src="%sassets/tools.js?v=%s"></script>' % (root, V)) if tools else ""
@@ -132,7 +157,7 @@ def layout(path, title, desc, body, active="", mcta=None, jsonld=None, tools=Fal
 <footer class="foot"><div class="wrap fgrid"><div><a class="logo" href="{home_href}">{LOGO}<span>{BRAND}</span></a><p class="muted small">Психологическая лаборатория Марины Степановой: знания, бесплатные инструменты и живые онлайн-сессии в группах до 8 человек.</p>
 <p class="small"><a href="{root}vazhno/">Важно: не медицинская услуга</a> · <a href="{root}oferta/">Оферта</a> · <a href="{root}politika/">Политика персональных данных</a> · <a href="{root}konfidencialnost/">Конфиденциальность на сайте</a></p></div>
 <div><b>Начать</b><a href="{root}navigator/">Навигатор</a><a href="{root}testy/">Тесты</a><a href="{root}podarki/">Подарки</a><a href="{root}moj-put/">Мой путь</a></div>
-<div><b>Знания</b><a href="{root}znaniya/">Энциклопедия</a><a href="{root}znaniya/igra-lila/">Игра «Лила»</a><a href="{root}znaniya/sindrom-samozvanca/">Синдром самозванца</a><a href="{root}znaniya/treugolnik-karpmana/">Треугольник Карпмана</a></div>
+<div><b>Знания</b><a href="{root}znaniya/">Энциклопедия</a><a href="{root}slushat/">Слушать (аудио)</a><a href="{root}znaniya/igra-lila/">Игра «Лила»</a><a href="{root}znaniya/sindrom-samozvanca/">Синдром самозванца</a><a href="{root}znaniya/treugolnik-karpmana/">Треугольник Карпмана</a></div>
 <div><b>Работа с Мариной</b><a href="{root}ceny/">Форматы и цены</a><a href="{root}diagnostika/">Диагностика</a><a href="{root}koleso-uspeha/">«Колесо успеха»</a><a href="{root}klub/">Закрытый клуб</a><a href="{root}psihologam/">Психологам</a><a href="{root}otzyvy/">Отзывы</a><a href="{root}faq/">Вопросы</a></div></div>
 <div class="wrap small muted fbot">© Марина Степанова · Telegram <a href="{TG}" target="_blank" rel="noopener">@MarinaNew</a> · канал <a href="https://t.me/koleso_uspeha" target="_blank" rel="noopener">@koleso_uspeha</a> · Живые тренинги: <a href="https://avtomaster24bot-lab.github.io/koleso-uspeha/">Код счастливой жизни</a> · Если вам сейчас очень плохо — <a href="{root}vazhno/#help">куда обратиться</a></div></footer>
 {mob}{MODAL}{GIFT}
@@ -166,7 +191,7 @@ GIFTS = [("testy/", "🧭", "8 тестов-самонаблюдений", "Са
          ("7-dnej/", "🔥", "Челлендж «7 дней»", "Неделя коротких практик: от денежных установок до плана мечты."),
          ("chek-listy/", "📄", "Чек-листы для печати", "PDF: «Тащу всё на себе», «Мои денежные установки», «Колесо баланса»."),
          ("znaniya/", "📚", "Энциклопедия", "%d статей простым языком — с практиками и источниками." % len(ARTICLES)),
-         ("moj-put/", "🏅", "Мой путь", "Ваш прогресс, результаты тестов, награды и следующий шаг.")]
+         ("slushat/", "🎧", "Слушать: аудио-объяснения", "%d коротких аудио о программах и статьях — в дороге, на прогулке, в подкасте." % len(AUDIO))]
 def giftgrid(root, n=8): return '<div class="grid g4">%s</div>' % "".join('<a class="gcard glass rv" href="%s%s"><span class="emo">%s</span><b>%s</b><span class="muted small">%s</span></a>' % (root, u, i, e(t), e(d)) for u, i, t, d in GIFTS[:n])
 
 TOPIC_ART = {"dengi": ["dengi-scenarii", "finansovyj-potolok", "kak-nazyvat-cenu"], "strahi": ["strah-uspeha", "sindrom-samozvanca", "bazovyj-strah"],
@@ -560,6 +585,46 @@ def politika_page():
     body = hero("Документы", "Политика персональных данных", "Как мы обращаемся с данными. Реквизиты оператора пока отмечены как заглушки.") + sec(politika_body(BRAND, SITE, root))
     layout("politika/", "Политика персональных данных", "Политика персональных данных Внутрикода: браузер, Telegram, ИИ-помощник. Реквизиты оператора — шаблон.", body, "", crumbs=[("politika/", "Политика персональных данных")])
 
+AKINDS = [("Программа", "Флагманская программа"), ("Модуль", "Модули «Колеса успеха»"), ("Тренинг", "Трансформационные тренинги"), ("Мини-тренинг", "Мини-тренинги"),
+          ("Игра", "Игра «Лила»"), ("Клуб", "Закрытый клуб"), ("Индивидуально", "Индивидуальная работа"), ("Диагностика", "Диагностика"), ("Марафон", "Марафоны"),
+          ("Для специалистов", "Психологам и коучам"), ("Статья", "Энциклопедия: статьи вслух")]
+def slushat_page():
+    root = "../"
+    have = [x for x in AUDIO if x["id"] in AMAN]
+    total = sum(AMAN[x["id"]]["duration"] for x in have)
+    chips = "".join('<a class="chip" href="#k-%d">%s</a> ' % (i, e(t)) for i, (k, t) in enumerate(AKINDS) if any(x["kind"] == k for x in have))
+    body = hero("Аудио · %d выпусков · %d мин" % (len(have), round(total / 60)), "🎧 Слушать Внутрикод",
+                "Короткие аудио-объяснения: что происходит на каждой программе, кому она подходит и что вы получаете, — и статьи энциклопедии вслух. Включайте в дороге, на прогулке или за делами.",
+                '<a class="btn" href="#" data-playall>▶ Слушать подряд</a><a class="btn ghost" href="podcast.xml">RSS-подкаст</a>', '<p class="small muted rv">Озвучено синтезированным женским голосом диктора — это не голос Марины. Сама Марина проводит все живые онлайн-встречи. Чтобы слушать в приложении подкастов, добавьте ссылку на RSS: <code>%sslushat/podcast.xml</code></p><p class="rv">%s</p>' % (SITE, chips))
+    for i, (k, t) in enumerate(AKINDS):
+        xs = [x for x in have if x["kind"] == k]
+        if not xs: continue
+        body += sec('<div id="k-%d"></div>' % i + head(k if k != "Статья" else "Энциклопедия", t) + '<div class="aud-list">%s</div>' % "".join(audio_block(x, root, compact=True, link=True) for x in xs), "alt" if i % 2 else "")
+    ld = {"@context": "https://schema.org", "@type": "PodcastSeries", "name": "Внутрикод — послушать объяснение", "url": SITE + "slushat/", "webFeed": SITE + "slushat/podcast.xml", "inLanguage": "ru", "author": {"@type": "Person", "name": "Марина Степанова"}}
+    layout("slushat/", "Слушать: аудио-объяснения программ и статей", "Аудио-объяснения программ Марины Степановой и статьи энциклопедии «Внутрикод» вслух. %d выпусков, RSS-подкаст." % len(have), body, "zn", jsonld=ld, crumbs=[("slushat/", "Слушать")])
+    podcast_rss(have)
+
+def podcast_rss(have):
+    from email.utils import format_datetime
+    from datetime import datetime, timedelta, timezone
+    base = datetime(2026, 11, 22, 10, 0, tzinfo=timezone(timedelta(hours=5)))
+    items = ""
+    for i, x in enumerate(have):
+        m = AMAN[x["id"]]; url = SITE + "assets/audio/%s.mp3" % x["id"]
+        link = SITE + x["url"] + "?utm_source=podcast&utm_medium=audio&utm_campaign=" + x["id"]
+        desc = "%s. %s Страница: %s" % (x["kind"], x["text"][:300].rsplit(" ", 1)[0] + "…", link)
+        items += ("<item><title>%s</title><description>%s</description><link>%s</link><guid isPermaLink=\"false\">vnutrikod-%s</guid><pubDate>%s</pubDate>"
+                  "<enclosure url=\"%s\" length=\"%d\" type=\"audio/mpeg\"/><itunes:duration>%d</itunes:duration><itunes:episodeType>full</itunes:episodeType><itunes:explicit>false</itunes:explicit></item>") % (
+            e(x["title"]), e(desc), e(link), x["id"], format_datetime(base - timedelta(minutes=i)), url, m["bytes"], int(m["duration"]))
+    rss = ('<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom"><channel>'
+           '<title>Внутрикод — послушать объяснение</title><link>%sslushat/</link><atom:link href="%sslushat/podcast.xml" rel="self" type="application/rss+xml"/><language>ru</language>'
+           '<description>Аудио-объяснения программ психолога Марины Степановой и статьи энциклопедии «Внутрикод» вслух. Озвучено синтезированным голосом диктора. Живые онлайн-встречи проводит Марина: t.me/MarinaNew</description>'
+           '<itunes:author>Марина Степанова · Внутрикод</itunes:author><itunes:summary>Психология простым языком: деньги, страхи, контроль, конфликты, самоценность, цели и игра «Лила».</itunes:summary>'
+           '<itunes:image href="%sassets/podcast-cover.png"/><image><url>%sassets/podcast-cover.png</url><title>Внутрикод — послушать объяснение</title><link>%sslushat/</link></image>'
+           '<itunes:category text="Health &amp; Fitness"><itunes:category text="Mental Health"/></itunes:category><itunes:explicit>false</itunes:explicit><itunes:type>episodic</itunes:type>%s</channel></rss>') % (SITE, SITE, SITE, SITE, SITE, items)
+    os.makedirs(os.path.join(OUT, "slushat"), exist_ok=True)
+    open(os.path.join(OUT, "slushat/podcast.xml"), "w", encoding="utf-8").write(rss)
+
 def podpiska_page():
     root = "../"
     body = hero("Подписка · не медицинская услуга", "ИИ-навигатор «Колесо успеха»", "За 2 минуты — тест «Колесо баланса». Затем ежедневный маршрут по методу Марины на этом сайте. За живой глубиной — диагностика или сессия.", '<a class="btn" href="%stesty/koleso/">Пройти бесплатный тест</a><a class="btn ghost" href="https://t.me/koleso_uspeha" target="_blank" rel="noopener">Telegram-канал</a>' % root)
@@ -601,7 +666,7 @@ if __name__ == "__main__":
     for m in MINIS: mini_page(m)
     for s in T: training_page(s)
     for m in MODULES: module_page(m)
-    flagship(); lila_page(); klub_page(); individual(); diagnostics(); marathons(); psy(); marina_page(); reviews_page(); faq_page(); vazhno(); privacy(); oferta_page(); politika_page(); podpiska_page(); notfound()
+    flagship(); lila_page(); klub_page(); individual(); diagnostics(); marathons(); psy(); marina_page(); reviews_page(); faq_page(); vazhno(); privacy(); oferta_page(); politika_page(); podpiska_page(); slushat_page(); notfound()
     catalog_js()
     urls = "".join("<url><loc>%s%s</loc></url>" % (SITE, p) for p, _ in PAGES if not p.endswith(".html"))
     open(os.path.join(OUT, "sitemap.xml"), "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">%s</urlset>' % urls)
